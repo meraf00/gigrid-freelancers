@@ -1,0 +1,6 @@
+autopep8
+flask
+flask-login
+flask-sqlalchemy
+mysqlclient
+python-dotenv
