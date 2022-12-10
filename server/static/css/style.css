@@ -1,0 +1,17 @@
+:root {
+  --light-gray: #c5c6c7;
+  --primary-fg: #66fcf1;
+  --primary-bg: #0b0c10;
+  --secondary-fg: #1f2833;
+  --secondary-bg: #45a29e;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  cursor: pointer;
+  color: blue;
+}

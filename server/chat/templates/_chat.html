@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Messages</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">    
+        <link rel="stylesheet" href="{{url_for('chat_bp.static', filename='css/style.css')}}">    
+        <script src="{{url_for('chat_bp.static', filename='js/socket.io.js')}}"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->        
+        Username: {{current_user.firstname}}
+        <h1 id="log"></h1>
+        
+        <div class="main">
+            <div class="col">
+                {% for chat in current_user.chats %}     
+                <div>
+                {% if chat.u1.id == current_user.id %}
+                    <a onclick="selectChat(this)" data-chatid="{{chat.id}}" >
+                        id: {{chat.u2.id}}
+                    </a><br>
+                    fname: {{chat.u2.firstname}}                    
+                {%else%}
+                    <a onclick="selectChat(this)" data-chatid="{{chat.id}}" >
+                        id: {{chat.u1.id}}
+                    </a><br>
+                    fname: {{chat.u1.firstname}}
+                    
+                {%endif%}                
+                </div>   
+
+                <hr>
+                {% endfor %}
+            </div>
+            
+            <div class="col" >
+                <div id="messages">
+                    r1
+                </div>
+                
+                <button onclick="send()">Send</button>
+                <div id="text" contenteditable="true">
+                    r2
+                </div>
+            </div>
+            
+            <div class="col">
+                c
+            </div>
+        </div>        
+        
+        <input type="hidden" id="user_token" value="{{current_user.token}}">
+        <script src="{{url_for('chat_bp.static', filename='js/main.js')}}"></script>
+    </body>
+</html>

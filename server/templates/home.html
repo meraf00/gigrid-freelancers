@@ -3,5 +3,6 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
-Hello {{current_user.firstname}}
+
+Hello {{current_user.firstname}} [{{current_user.user_type}}]
 {% endblock %}

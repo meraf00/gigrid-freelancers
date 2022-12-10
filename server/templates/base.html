@@ -18,6 +18,7 @@
         <![endif]-->
         {% block body %}
         {% endblock %}        
+        <input type="hidden" id="user_token" value="{{current_user.token}}">
         <script src=""></script>
     </body>
 </html>

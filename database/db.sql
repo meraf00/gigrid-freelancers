@@ -11,7 +11,9 @@ CREATE TABLE User(
     lastname VARCHAR(50) NOT NULL,
     email VARCHAR(50) UNIQUE NOT NULL,
     `password` VARCHAR(300) NOT NULL,
-    date_of_birth DATETIME NOT NULL
+    date_of_birth DATETIME NOT NULL,
+    user_type ENUM('FREELANCER', 'EMPLOYER'),
+    token VARCHAR(200)
 );
 
 
@@ -30,7 +32,7 @@ CREATE TABLE `Message`(
     sender_id INT NOT NULL,
     time_stamp DATETIME NOT NULL DEFAULT NOW(),
 
-    content_type INT DEFAULT 0,
+    content_type ENUM('TEXT', 'FILE') default 'TEXT',
     content VARCHAR(4000) NOT NULL,
 
     FOREIGN KEY (chat_id) REFERENCES Chat(id),

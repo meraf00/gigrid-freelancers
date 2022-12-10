@@ -1,0 +1,158 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.3rem 1rem;
+  align-items: center;
+  box-shadow: 0 1px 5px rgba(128, 128, 128, 0.555);
+}
+
+nav ul {
+  display: flex;
+  align-items: center;
+}
+
+nav li {
+  list-style: none;
+  padding: 0 1rem;
+}
+
+section {
+  position: relative;
+}
+
+.logo img,
+.avater img {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid gray;
+  border-radius: 50%;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr 2.5fr 1fr;
+  height: 90vh;
+}
+
+.chat-item {
+  padding: 0.5rem;
+  display: flex;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+.chat-item .group {
+  margin-left: 0.75rem;
+}
+
+.chat-item .username {
+  font-size: medium;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  margin-bottom: 0.3rem;
+}
+
+.chat-item .text {
+  color: gray;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  max-width: 10rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-list {
+  border-right: 1px solid gray;
+}
+
+.chat-list .chat-item {
+  border-bottom: solid 1px gray;
+}
+
+.chat-list,
+.chat-detail {
+  padding: 0.7rem 0.5rem;
+}
+
+.chat-history {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  overflow-y: auto;
+  height: 71vh;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  /* border-right: 1px solid gray; */
+}
+
+.text-message {
+  padding: 0.2rem 0.5rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid blueviolet;
+  background-color: powderblue;
+  border-radius: 0.4rem;
+  max-width: 40%;
+}
+
+.text-message.sent {
+  align-self: end;
+}
+
+.text-message .content {
+  margin-bottom: 0.5rem;
+  padding: 0 0.3rem;
+}
+
+.time {
+  font-family: "Courier New", Courier, monospace;
+  font-weight: 600;
+  font-size: small;
+  text-align: right;
+  color: blueviolet;
+}
+
+.user-input {
+  position: absolute;
+  background-color: powderblue;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid gray;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.format-options {
+  display: flex;
+  list-style: none;
+  justify-content: flex-end;
+  padding: 0.5rem;
+}
+.format-options li {
+  padding: 0.1rem 0.5rem;
+}
+
+#text-input {
+  padding: 1rem;
+  height: 2rem;
+  overflow-y: auto;
+  background-color: whitesmoke;
+}
+
+* {
+  /* outline: rgba(162, 201, 162, 0.527) solid 1px; */
+}
+
+@media (max-width: 700px) {
+  .chat-detail {
+    display: none;
+  }
+
+  .main {
+    grid-template-columns: 1fr 2fr;
+  }
+}

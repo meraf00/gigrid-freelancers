@@ -1,13 +1,14 @@
 import os
+from datetime import datetime
 from dotenv import load_dotenv
 
+from werkzeug.security import generate_password_hash
 from flask import Flask, render_template, request, url_for, redirect
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
-from werkzeug.security import generate_password_hash
-
-from model import User, db
-from datetime import datetime
+from model import User, UserType, db
+from chat import chat_bp, socketio
+from auth import AuthenticationManager
 
 load_dotenv()
 
@@ -20,6 +21,12 @@ db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+socketio.init_app(app)
+
+app.register_blueprint(chat_bp, url_prefix='/messages')
+
+auth_manager = AuthenticationManager(os.getenv('FLASK_SECRET_KEY'))
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -28,7 +35,7 @@ def load_user(user_id):
 
 @app.route("/")
 def home():
-    return render_template("home.html", current_user=current_user)
+    return render_template("home.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -36,18 +43,27 @@ def login():
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
-        if User.authenticate(email, password):
+        redirect_url = request.form.get('redirect', url_for('home'))
+
+        if auth_manager.verify_credentials(email, password):
             user = User.get_by_email(email)
+            user.token = auth_manager.generate_auth_token(user.id)
+            db.session.commit()
+
             login_user(user)
-            return redirect(url_for('home'))
+            return redirect(redirect_url)
         else:
-            return "Invalid"
+            return render_template("login.html", message="Invalid credentials")
     return render_template("login.html")
 
 
 @app.route("/logout")
 def logout():
+    user = User.get(current_user.id)
+    user.token = None
+    db.session.commit()
     logout_user()
+
     return redirect(url_for('home'))
 
 
@@ -60,7 +76,8 @@ def register():
         password = request.form.get("password")
 
         new_user = User(firstname=fname, lastname=lname,
-                        email=email, password=generate_password_hash(password), date_of_birth=datetime.now())
+                        email=email, password=generate_password_hash(password),
+                        date_of_birth=datetime.now(), user_type=UserType.FREELANCER)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))
@@ -69,4 +86,4 @@ def register():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    socketio.run(app, debug=True)
