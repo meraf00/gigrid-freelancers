@@ -11,16 +11,33 @@ db = SQLAlchemy()
 
 
 class UserType:
+    """Data class to represent types of users involved in the system"""
+
     FREELANCER = 'FREELANCER'
     EMPLOYER = 'FREELANCER'
 
 
 class ContentType:
+    """Data class to represent types of message contents supported by messaging functionality"""
+
     TEXT = 'TEXT'
     FILE = 'FILE'
 
 
 class User(db.Model, UserMixin):
+    """User database model
+
+    Parameters:
+        id (int): unique id that identify single user
+        firstname (str): user's first name
+        lastname (str): user's last name
+        email (str): user's email
+        password (str): user's hashed password
+        date_of_birth (datetime): user's birth date
+        user_type (str): one of supported user types specified under UserType class
+        user_type (token): user's authentication token
+    """
+
     id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(50))
     lastname = db.Column(db.String(50))
@@ -32,6 +49,12 @@ class User(db.Model, UserMixin):
 
     @property
     def chats(self):
+        """Gets all chats associated with user
+
+        Returns:
+            list: list of Chat objects
+        """
+
         all_chats = []
         all_chats.extend(self.initiated_chats)
         all_chats.extend(self.joined_chats)
@@ -39,10 +62,27 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def get(user_id: int) -> Optional[User]:
+        """Gets user by id
+
+        Args:
+            user_id (int): user id
+
+        Returns:
+            User: user object if user is found, None otherwise
+        """
+
         return User.query.filter_by(id=user_id).first()
 
     @staticmethod
     def get_by_email(email: str) -> Optional[User]:
+        """Gets user by email
+
+        Args:
+            email (int): user email
+
+        Returns:
+            User: user object if user is found, None otherwise
+        """
         return User.query.filter_by(email=email).first()
 
     def __repr__(self):
@@ -50,6 +90,8 @@ class User(db.Model, UserMixin):
 
 
 class Chat(db.Model):
+    """Chat database model"""
+
     id = db.Column(db.Integer, primary_key=True)
     user_1 = db.Column(db.Integer, db.ForeignKey(User.id))
     user_2 = db.Column(db.Integer, db.ForeignKey(User.id))
@@ -61,19 +103,38 @@ class Chat(db.Model):
 
     @staticmethod
     def get(chat_id: int) -> Optional[User]:
+        """Gets chat by id
+
+        Args:
+            chat_id (int): chat id
+
+        Returns:
+            Chat: chat object if chat is found, None otherwise
+        """
+
         return Chat.query.filter_by(id=chat_id).first()
 
     @staticmethod
-    def get_chat(sender_id, receiver_id):
+    def get_chat(user_1, user_2):
+        """Gets chat associating two users
+
+        Args:
+            user_1 (int): id of one user
+            user_2 (int): id of other user
+
+        Returns:
+            Chat: chat object if chat associating the users is found, None otherwise
+        """
+
         chat = Chat.query.filter(
             db.or_(
                 db.and_(
-                    Chat.user_1 == sender_id,
-                    Chat.user_2 == receiver_id
+                    Chat.user_1 == user_1,
+                    Chat.user_2 == user_2
                 ),
                 db.and_(
-                    Chat.user_1 == receiver_id,
-                    Chat.user_2 == sender_id
+                    Chat.user_1 == user_2,
+                    Chat.user_2 == user_1
                 )
             )
         )
@@ -84,6 +145,8 @@ class Chat(db.Model):
 
 
 class Message(db.Model):
+    """Message database model"""
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     chat_id = db.Column(db.Integer, db.ForeignKey(Chat.id), primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey(User.id))
@@ -93,10 +156,16 @@ class Message(db.Model):
 
     sender = db.relationship(User, foreign_keys=[sender_id])
     chat = db.relationship(Chat, backref=db.backref(
-        'messages', order_by='Message.time_stamp.desc()'), foreign_keys=[chat_id])
+        'messages', order_by='Message.time_stamp'), foreign_keys=[chat_id])
 
     @property
     def receiver(self):
+        """Gets receiver of message
+
+        Returns:
+            User: the recepient of message
+        """
+
         if self.chat.u1.id == self.sender_id:
             return self.chat.u2
         return self.chat.u1
