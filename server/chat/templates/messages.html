@@ -11,7 +11,9 @@
     <title></title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
     <link rel="stylesheet" href="{{url_for('chat_bp.static', filename='css/style.css')}}" />
+    <script src="{{url_for('chat_bp.static', filename='js/socket.io.js')}}"></script>
 </head>
 
 <body>
@@ -24,7 +26,7 @@
 
     <nav>
         <div class="logo">
-            <img src="/ui-mockups/sitemap/FSE-project-sitemap.png" alt="" />
+            <img src="" alt="" />
         </div>
         <ul>
             <li>Home</li>
@@ -73,7 +75,7 @@
                             <span class="underline">U</span>
                         </button>
                     </li>
-                    <li><button id="sendBtn">Send</button></li>
+                    <li><button id="send-message-btn">Send</button></li>
                 </ul>
 
                 <div id="text-input" contenteditable="true"></div>
@@ -81,7 +83,7 @@
         </section>
 
         <!-- Detail panel -->
-        <section class="chat-detail">
+        <section class="chat-detail" id="chat-detail">
             <div class="chat-item">
                 <div class="avater">
                     <img src="/ui-mockups/sitemap/FSE-project-sitemap.png" alt="" />
@@ -96,7 +98,7 @@
     </header>
 
     <input type="hidden" id="user_token" value="{{current_user.token}}">
-    <script src="{{url_for('chat_bp.static', filename='js/ui.js')}}"></script>
+    <script src="{{url_for('chat_bp.static', filename='js/reusable-ui-components.js')}}"></script>
     <script src="{{url_for('chat_bp.static', filename='js/text-formater.js')}}"></script>
     <script src="{{url_for('chat_bp.static', filename='js/main.js')}}"></script>
 </body>
