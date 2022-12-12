@@ -49,7 +49,6 @@ def get_messages():
 
     result = []
     for message in chat.messages:
-        print(type(message.time_stamp))
         result.append({
             "id": message.id,
             "content": message.content,
@@ -61,10 +60,10 @@ def get_messages():
     return jsonify(result)
 
 
-@ socketio.on('join')
+@socketio.on('join')
 def handle_join(data):
     token = data.get('authentication_token', '')
-    user = load_user(token)
+    user: User = load_user(token)
 
     if user:
         chat_ids = [chat.id for chat in user.chats]
@@ -80,7 +79,7 @@ def handle_join(data):
                       rooms=chat_ids)
 
 
-@ socketio.on('send_message')
+@socketio.on('send_message')
 def handle_message(data):
     token = data.get('authentication_token', '')
     user = load_user(token)

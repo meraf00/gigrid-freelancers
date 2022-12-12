@@ -25,7 +25,8 @@ class ContentType:
 
 
 class User(db.Model, UserMixin):
-    """User database model
+    """
+    User database model
 
     Parameters:
         id (int): unique id that identify single user
@@ -36,6 +37,8 @@ class User(db.Model, UserMixin):
         date_of_birth (datetime): user's birth date
         user_type (str): one of supported user types specified under UserType class
         user_type (token): user's authentication token
+        initiated_chats (list[Chat]): list of Chat objects initiated by this user
+        joined_chats (list[Chat]): list of Chat objects joined by this user
     """
 
     id = db.Column(db.Integer, primary_key=True)
@@ -90,7 +93,16 @@ class User(db.Model, UserMixin):
 
 
 class Chat(db.Model):
-    """Chat database model"""
+    """Chat database model
+
+    Parameters:
+        id (str): unique chat id
+        user_1 (str): chat initiator id
+        user_2 (str): second user id in chat
+        u1 (User): chat initiator User object
+        u2 (User): second User object
+        messages (list): list of messages sent in the chat
+    """
 
     id = db.Column(db.Integer, primary_key=True)
     user_1 = db.Column(db.Integer, db.ForeignKey(User.id))
@@ -145,7 +157,19 @@ class Chat(db.Model):
 
 
 class Message(db.Model):
-    """Message database model"""
+    """Message database model
+
+    Parameters:
+        id (str): unique message id
+        chat_id (str): chat containing two users        
+        sender_id (str): the user id of sender of the message
+        time_stamp (datetime): sent time
+        content (str): the message sent
+        content_type (str): specifies how to interpret the content
+            (default is 'TEXT')
+        sender (User): sender of the message
+        chat (Chat): the chat the message belongs to
+    """
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     chat_id = db.Column(db.Integer, db.ForeignKey(Chat.id), primary_key=True)

@@ -5,3 +5,4 @@ flask-socketio
 flask-sqlalchemy
 mysqlclient
 python-dotenv
+requests

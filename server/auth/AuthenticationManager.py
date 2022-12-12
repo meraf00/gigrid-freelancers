@@ -60,8 +60,9 @@ class AuthenticationManager:
         """
         Verifies the existance of given credentials on database
 
-        email (str): email of user
-        password (str): password of user
+        Args:
+            email (str): email of user
+            password (str): password of user
 
         Returns:
             bool: True if email and password are valid, False otherwise
