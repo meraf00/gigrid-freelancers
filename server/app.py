@@ -8,6 +8,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 
 from model import User, UserType, db
 from chat import chat_bp, socketio
+from docs.doc import doc_bp
 from auth import AuthenticationManager
 
 load_dotenv()
@@ -24,6 +25,7 @@ login_manager.init_app(app)
 socketio.init_app(app)
 
 app.register_blueprint(chat_bp, url_prefix='/messages')
+app.register_blueprint(doc_bp, url_prefix='/docs')
 
 auth_manager = AuthenticationManager(os.getenv('FLASK_SECRET_KEY'))
 
