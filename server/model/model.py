@@ -196,3 +196,35 @@ class Message(db.Model):
 
     def __repr__(self):
         return f"{self.content_type.title()}(id={self.id}, chat_id={self.chat_id}, sender={self.sender.firstname}, receiver={self.receiver.firstname}, content={self.content})"
+
+
+class File(db.Model):
+    """File database model
+
+    Parameters:
+        id (str): unique file id
+        file_name (str): name of file
+        file_path (str): path to file on local drive
+        mime_type (str): MIME type of file
+    """
+
+    id = db.Column(db.String(36), primary_key=True)
+    file_name = db.Column(db.String(30))
+    file_path = db.Column(db.String(260))
+    mime_type = db.Column(db.String(128))
+
+    @staticmethod
+    def get(file_id: str) -> Optional[File]:
+        """Gets user by id
+
+        Args:
+            file_id (str): file id
+
+        Returns:
+            File: file object if file is found, None otherwise
+        """
+
+        return File.query.filter_by(id=file_id).first()
+
+    def __repr__(self):
+        return f"File(id={self.id}, file_name={self.file_name}, mime_type={self.mime_type})"
