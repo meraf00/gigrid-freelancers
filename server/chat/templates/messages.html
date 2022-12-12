@@ -1,67 +1,62 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <![endif]-->
-<html>
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title></title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
-    <link rel="stylesheet" href="{{url_for('chat_bp.static', filename='css/style.css')}}" />
-    <script src="{{url_for('chat_bp.static', filename='js/socket.io.js')}}"></script>
-</head>
+{% block head %}
+<link rel="stylesheet" href="{{url_for('chat_bp.static', filename='css/style.css')}}" />
+<script src="{{url_for('chat_bp.static', filename='js/socket.io.js')}}"></script>
+{% endblock %}
 
-<body>
-    <!--[if lt IE 7]>
-      <p class="browsehappy">
-        You are using an <strong>outdated</strong> browser. Please
-        <a href="#">upgrade your browser</a> to improve your experience.
-      </p>
-    <![endif]-->
+{% block body %}
+<nav>
+    <div class="logo">
+        <img src="" alt="" />
+    </div>
+    <ul>
+        <li>Home</li>
+        <li>Jobs</li>
+        <li>About</li>
+        <li>Contact</li>
+        <li>Log in</li>
+    </ul>
+</nav>
 
-    <nav>
-        <div class="logo">
-            <img src="" alt="" />
-        </div>
-        <ul>
-            <li>Home</li>
-            <li>Jobs</li>
-            <li>About</li>
-            <li>Contact</li>
-            <li>Log in</li>
-        </ul>
-    </nav>
-
-    <header class="main">
-        <!-- Chat list -->
-        <section class="chat-list">
-            {% for chat in current_user.chats %}
-            <div class="chat-item" onclick="openChat(this)" data-chat_id="{{chat.id}}">
-                <div class="avater">
-                    <img src="{{current_user.id}}" alt="" />
-                </div>
-
-                <div class="group">
-                    <h1 class="username">{{"%s %s" % (current_user.firstname, current_user.lastname)}}</h1>
-                    {% if chat.messages %}
-                    <p class="text">{{chat.messages[-1].content}}</p>
-                    {% endif %}
-                </div>
+<header class="main">
+    <!-- Chat list -->
+    <section class="chat-list">
+        {% for chat in current_user.chats %}
+        <div class="chat-item" onclick="openChat(this)" data-chat_id="{{chat.id}}">
+            <div class="avater">
+                <img src="{{current_user.id}}" alt="" />
             </div>
-            {% endfor %}
-        </section>
 
-        <!-- Chat panel -->
-        <section>
-            <div class="chat-history" id="chat-history"></div>
+            <div class="group">
+                <h1 class="username">{{"%s %s" % (current_user.firstname, current_user.lastname)}}</h1>
+                {% if chat.messages %}
+                <p class="text">{{chat.messages[-1].content}}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </section>
 
-            <div class="user-input">
-                <ul class="format-options">
+    <!-- Chat panel -->
+    <section>
+        <div class="chat-history" id="chat-history"></div>
+
+        <div class="user-input">
+            <div class="menu-bar">
+                <form target="form-sink" id="file-upload-form" class="file-upload-form"
+                    action="{{url_for('chat_bp.upload_file')}}" method="post" enctype="multipart/form-data">
+                    <label for="file">
+                        <i class="fas fa-paperclip" aria-hidden="true"></i>
+                    </label>
+                    <input class="hidden" type="file" name="file" id="file">
+                    <span id="filename"></span>
+
+                    <i id="clear-file" class="fas fa-trash fa-sm hidden" aria-hidden="true"></i>
+                </form>
+                <iframe class="hidden" name="form-sink" id="fileupload-form-sink"></iframe>
+
+                <ul class="options">
                     <li>
                         <button class="formatter" data-format="bold">
                             <strong>B</strong>
@@ -77,30 +72,31 @@
                     </li>
                     <li><button id="send-message-btn">Send</button></li>
                 </ul>
-
-                <div id="text-input" contenteditable="true"></div>
             </div>
-        </section>
 
-        <!-- Detail panel -->
-        <section class="chat-detail" id="chat-detail">
-            <div class="chat-item">
-                <div class="avater">
-                    <img src="/ui-mockups/sitemap/FSE-project-sitemap.png" alt="" />
-                </div>
+            <div id="text-input" contenteditable="true"></div>
+        </div>
+    </section>
 
-                <div class="group">
-                    <h1 class="username">Alli Rake</h1>
-                    <p class="text">Online</p>
-                </div>
+    <!-- Detail panel -->
+    <section class="chat-detail" id="chat-detail">
+        <div class="chat-item">
+            <div class="avater">
+                <img src="/ui-mockups/sitemap/FSE-project-sitemap.png" alt="" />
             </div>
-        </section>
-    </header>
 
-    <input type="hidden" id="user_token" value="{{current_user.token}}">
-    <script src="{{url_for('chat_bp.static', filename='js/reusable-ui-components.js')}}"></script>
-    <script src="{{url_for('chat_bp.static', filename='js/text-formater.js')}}"></script>
-    <script src="{{url_for('chat_bp.static', filename='js/main.js')}}"></script>
-</body>
+            <div class="group">
+                <h1 class="username">Alli Rake</h1>
+                <p class="text">Online</p>
+            </div>
+        </div>
+    </section>
+</header>
 
-</html>
+<input type="hidden" id="user_token" value="{{current_user.token}}">
+<script src="{{url_for('chat_bp.static', filename='js/reusable-ui-components.js')}}"></script>
+<script src="{{url_for('chat_bp.static', filename='js/file-upload.js')}}"></script>
+<script src="{{url_for('chat_bp.static', filename='js/text-formater.js')}}"></script>
+<script src="{{url_for('chat_bp.static', filename='js/main.js')}}"></script>
+
+{% endblock %}

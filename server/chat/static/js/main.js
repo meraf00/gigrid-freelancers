@@ -4,6 +4,7 @@ BASE_URL = "http://localhost:5000";
 CONNECT = "connect";
 JOIN = "join";
 SEND_MESSAGE = "send_message";
+SEND_FILE = "send_file";
 RECEIVE_MESSAGE = "receive_message";
 ONLINE_ANN = "online_announcement";
 
@@ -33,14 +34,27 @@ const updateChatHistoryUI = (data) => {
   chat_history.innerHTML = "";
 
   data.forEach((message) => {
-    chat_history.innerHTML += messageComponent(
-      message.content,
-      new Date(message.timestamp).toLocaleTimeString(navigator.language, {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      message.sent ? "sent" : ""
-    );
+    console.log(message);
+    if (message.content_type === "TEXT") {
+      chat_history.innerHTML += textMessageComponent(
+        message.content,
+        new Date(message.timestamp).toLocaleTimeString(navigator.language, {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        message.sent ? "sent" : ""
+      );
+    } else if (message.content_type === "FILE") {
+      chat_history.innerHTML += fileMessageComponent(
+        message.file_name,
+        message.file_link,
+        new Date(message.timestamp).toLocaleTimeString(navigator.language, {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        message.sent ? "sent" : ""
+      );
+    }
   });
 };
 
@@ -83,5 +97,24 @@ const sendMessage = () => {
   text_field.innerHTML = "";
 };
 
+const sendFile = () => {
+  uploadFile().then((response) => {
+    if (response) {
+      response = JSON.parse(response);
+
+      if (response.status === "success") {
+        socket.emit(SEND_FILE, {
+          authentication_token: user_token,
+          file_id: response.file_id,
+          chat_id: current_chat,
+        });
+      }
+    }
+  });
+};
+
 // UI Event listening
-send_btn.addEventListener("click", sendMessage);
+send_btn.addEventListener("click", () => {
+  sendMessage();
+  sendFile();
+});
