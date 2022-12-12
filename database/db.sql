@@ -39,3 +39,17 @@ CREATE TABLE `Message`(
     FOREIGN KEY (sender_id) REFERENCES User(id),
     PRIMARY KEY (id, chat_id)    
 );
+
+CREATE TABLE `File`(
+    id CHAR(36) PRIMARY KEY,
+    file_name VARCHAR(30),
+    file_path VARCHAR(260),
+    mime_type VARCHAR(128) 
+);
+
+-- CREATE TABLE `Attachment`(
+--     id INT PRIMARY KEY,
+--     file_id VARCHAR(36),
+
+--     FOREIGN KEY (file_id) REFERENCES `File`(id)
+-- );
