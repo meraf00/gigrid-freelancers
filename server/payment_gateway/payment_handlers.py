@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import requests
-from PaymentException import *
+from exceptions import *
 
 
 class PaymentHandler(ABC):
