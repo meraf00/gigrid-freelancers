@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import requests
-from PaymentException import TransactionException
+from PaymentException import *
 
 
 class PaymentHandler(ABC):
@@ -70,7 +70,7 @@ class ChapaPaymentHandler(PaymentHandler):
                 raise KeyError(f'{key} is missing in transaction data')
 
         if data['currency'] != 'ETB':
-            raise TransactionException("Currency must be ETB")
+            raise InvalidCurrency
 
         try:
             if float(data['amount']) <= 0:
