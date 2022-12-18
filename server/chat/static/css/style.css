@@ -99,7 +99,7 @@ section {
 }
 
 .text-message.sent,
-.file-message {
+.file-message.sent {
   align-self: end;
 }
 

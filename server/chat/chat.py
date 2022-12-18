@@ -11,7 +11,7 @@ from flask_socketio import SocketIO, join_room
 
 from model import User, Chat, Message, File, ContentType
 from utils import FileManager
-from auth import AuthenticationManager
+from auth import AuthenticationManager, load_user
 from .ChatManager import ChatManager
 
 sys.path.append('..')
@@ -19,17 +19,8 @@ sys.path.append('..')
 chat_bp = Blueprint('chat_bp', __name__,
                     static_folder='static', template_folder='templates')
 
-socketio = SocketIO()
+socketio = SocketIO(cors_allowed_origins="*")
 file_mgr = FileManager(os.getenv('UPLOAD_FOLDER'))
-
-
-def load_user(token: str) -> Optional[User]:
-    auth_manager = AuthenticationManager(os.getenv('FLASK_SECRET_KEY'))
-    user_id = auth_manager.verify_token(token)
-    if user_id:
-        user = User.get(user_id)
-        if user.token == token:
-            return user
 
 
 @chat_bp.route('/')
@@ -69,7 +60,7 @@ def get_messages():
                 result.append({
                     "id": message.id,
                     "file_name": file.file_name,
-                    "file_link": message.content,
+                    "file_link": url_for('files', id=file.id),
                     "content_type": message.content_type,
                     "timestamp": message.time_stamp,
                     "sent": user.id == message.sender_id
@@ -154,3 +145,8 @@ def handle_file(data):
     chat_mgr.send_message(chat_id, file.id,
                           content_type=ContentType.FILE)
     socketio.emit('receive_message', rooms=chat_id)
+
+
+@socketio.on('event')
+def handle_event(data):
+    pass

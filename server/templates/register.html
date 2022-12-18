@@ -3,18 +3,19 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
+{{message}}
 <form action="{{url_for('register')}}" method="post">
 
     <div>
         <input type="text" placeholder="firstname" name="firstname">
-        <input type="text" placeholder="lastname" name="lastname">        
+        <input type="text" placeholder="lastname" name="lastname">
     </div>
     <label for="email-field">Email</label>
-    <input type="text" name="email" id="email-field"/>
-    
+    <input type="text" name="email" id="email-field" />
+
     <label for="password-field">Password</label>
-    <input type="password" name="password" id="password-field"/>
-        
-    <input type="submit"/>
+    <input type="password" name="password" id="password-field" />
+
+    <input type="submit" />
 </form>
 {% endblock %}

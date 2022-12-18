@@ -22,6 +22,7 @@ class ContentType:
 
     TEXT = 'TEXT'
     FILE = 'FILE'
+    EVENT = 'EVENT'
 
 
 class User(db.Model, UserMixin):
@@ -176,7 +177,8 @@ class Message(db.Model):
     sender_id = db.Column(db.Integer, db.ForeignKey(User.id))
     time_stamp = db.Column(db.DateTime, default=datetime.now)
     content = db.Column(db.String(200))
-    content_type = db.Column(db.Enum(ContentType.TEXT, ContentType.FILE))
+    content_type = db.Column(
+        db.Enum(ContentType.TEXT, ContentType.FILE, ContentType.EVENT))
 
     sender = db.relationship(User, foreign_keys=[sender_id])
     chat = db.relationship(Chat, backref=db.backref(
@@ -215,7 +217,7 @@ class File(db.Model):
 
     @staticmethod
     def get(file_id: str) -> Optional[File]:
-        """Gets user by id
+        """Gets file by id
 
         Args:
             file_id (str): file id
@@ -228,3 +230,33 @@ class File(db.Model):
 
     def __repr__(self):
         return f"File(id={self.id}, file_name={self.file_name}, mime_type={self.mime_type})"
+
+
+class Job(db.Model):
+    id = db.Column(db.String(36), primary_key=True)
+
+
+class Escrow(db.Model):
+    id = db.Column(db.String(36), primary_key=True)
+    job_id = db.Column(db.String(36), db.ForeignKey(Job.id))
+    worker_id = db.Column(db.String(36), db.ForeignKey(User.id))
+    amount = db.Column(db.Float)
+
+    job = db.relationship(Job, backref='escrow', foreign_keys=[job_id])
+    # to = db.relationship(User, backref='escrow', foreign_keys=[worker_id])
+
+    @staticmethod
+    def get(escrow_id: str) -> Optional[Escrow]:
+        """Gets escrow by id
+
+        Args:
+            escrow_id (str): escrow id
+
+        Returns:
+            Escrow: escrow object if escrow is found, None otherwise
+        """
+
+        return Escrow.query.filter_by(id=escrow_id).first()
+
+    def __repr__(self):
+        return f"Escrow(id={self.id}, job={self.job_id}, to={self.worker_id}, amount={self.amount})"

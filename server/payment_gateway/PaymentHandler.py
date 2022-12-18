@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-import json
 import requests
 from PaymentException import TransactionException
 
@@ -37,6 +36,7 @@ class ChapaPaymentHandler(PaymentHandler):
     BASE_URL = 'https://api.chapa.co'
     PAYMENT_URL = f'{BASE_URL}/{API_VERSION}/transaction/initialize'
     VERIFICATION_URL = f'{BASE_URL}/{API_VERSION}/transaction/verify'
+    TRANSFER_URL = f'{BASE_URL}/{API_VERSION}/transfers'
 
     def __init__(self, secret_key, use_sandbox=True):
         """
@@ -58,7 +58,8 @@ class ChapaPaymentHandler(PaymentHandler):
             data (dict): key value pairs expected to be send to Chapa API
 
         Raises:
-            TransactionException: if one of expected keys is missing in data
+            KeyError: if one of expected keys is missing in data
+            TransactionException: if value of data is invalid
         """
 
         expected_keys = ['amount', 'currency', 'email', 'first_name',
@@ -66,8 +67,17 @@ class ChapaPaymentHandler(PaymentHandler):
 
         for key in expected_keys:
             if not data.get(key):
-                raise TransactionException(
-                    f'{key} is missing in transaction data')
+                raise KeyError(f'{key} is missing in transaction data')
+
+        if data['currency'] != 'ETB':
+            raise TransactionException("Currency must be ETB")
+
+        try:
+            if float(data['amount']) <= 0:
+                raise TransactionException("amount must be greater than 0")
+
+        except TypeError:
+            raise TransactionException("amount must be valid number")
 
     def generate_checkout_url(self, data: dict) -> str:
         """Generates checkout url that users can use for payment
@@ -83,19 +93,75 @@ class ChapaPaymentHandler(PaymentHandler):
 
         response = requests.post(self.PAYMENT_URL,
                                  data=data, headers=self.headers)
-        response_json = json.loads(response.text)
+
+        response_json = response.json()
 
         if response_json['status'] == 'success':
             return response_json['data']['checkout_url']
 
-    def verify_transaction(self, data: dict) -> bool:
-        return "super().verify_transaction(data)"
+    def verify_transaction(self, transaction_reference: str) -> bool:
+        response = requests.get(
+            f"{self.VERIFICATION_URL}/{transaction_reference}", headers=self.headers)
+
+        try:
+            return response.json()["status"] == "success"
+        except:
+            return False
 
     def send_payment(self, data: dict):
-        return 'super().send_payment(data)'
+        """
+        Sends payment to specified account        
+        """
+
+        if self.use_sandbox:
+            return True
+
+        response = requests.post(
+            self.TRANSFER_URL, data=data, headers=self.headers)
+        return response.text
+
+    def _get_banks(self):
+        response = requests.get(
+            "https://api.chapa.co/v1/banks", headers=self.headers)
+        return response.json()
 
 
 if __name__ == '__main__':
-    handler = ChapaPaymentHandler('key')
-    handler.generate_checkout_url({})
-    print(handler.header)
+    import os
+    from dotenv import load_dotenv
+    load_dotenv()
+
+    handler = ChapaPaymentHandler(os.getenv('CHAPA_SECRET_KEY'))
+
+    ref = 'tx-234'
+    checkout_url = handler.generate_checkout_url({
+        'amount': '100',
+        'currency': 'ETB',
+        'email': 'rak373429@gmail.com',
+        'first_name': 'Abebe',
+        'last_name': 'Bikila',
+        'tx_ref': ref,
+        'callback_url': 'http://localhost:5000',
+        'return_url': 'http://localhost:5000/login',
+        'customization[title]': 'Freelancers',
+        'customization[description]': 'Send payment'
+    })
+    print(checkout_url)
+
+    print(handler.verify_transaction(ref))
+
+    # data = {
+    #     'account_name': 'Israel Goytom',
+    #     'account_number': '1000012345678',
+    #     'amount': '20',
+    #     'currency': 'ETB',
+    #     'beneficiary_name': 'Abe Kebe',
+    #     'reference': '3241342142sfdd',
+    #     'bank_code': 'f48ecb7a-6fd8-45bb-9ae1-5de7b6962b0d'
+    # }
+
+    # banks = handler._get_banks()['data']
+    # print("\n".join([f"{bank['id']}, {bank['name']}"
+    #       for bank in banks]))
+    # print(banks)
+    # print(handler.send_payment(data))

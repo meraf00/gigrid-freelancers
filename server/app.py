@@ -3,10 +3,11 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 from werkzeug.security import generate_password_hash
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from sqlalchemy.exc import IntegrityError
 
-from model import User, UserType, db
+from model import User, UserType, db, File, Message, ContentType
 from chat import chat_bp, socketio
 from docs.doc import doc_bp
 from auth import AuthenticationManager
@@ -80,11 +81,28 @@ def register():
         new_user = User(firstname=fname, lastname=lname,
                         email=email, password=generate_password_hash(password),
                         date_of_birth=datetime.now(), user_type=UserType.FREELANCER)
-        db.session.add(new_user)
-        db.session.commit()
+
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            return render_template("register.html", message="Email already exists")
+
         return redirect(url_for('login'))
 
     return render_template("register.html")
+
+
+@app.route('/files/<id>')
+@login_required
+def files(id):
+    message = Message.query.filter_by(
+        content_type=ContentType.FILE, content=id).first()
+    if current_user.id in [message.chat.u1.id, message.chat.u2.id]:
+        return send_file(File.get(id).file_path)
+
+    return "Unauthorize file access"
 
 
 if __name__ == "__main__":

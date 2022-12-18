@@ -1,1 +1,1 @@
-from .AuthenticationManager import AuthenticationManager
+from .AuthenticationManager import AuthenticationManager, load_user

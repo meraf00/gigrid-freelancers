@@ -32,7 +32,7 @@ CREATE TABLE `Message`(
     sender_id INT NOT NULL,
     time_stamp DATETIME NOT NULL DEFAULT NOW(),
 
-    content_type ENUM('TEXT', 'FILE') default 'TEXT',
+    content_type ENUM('TEXT', 'FILE', 'EVENT') default 'TEXT',
     content VARCHAR(4000) NOT NULL,
 
     FOREIGN KEY (chat_id) REFERENCES Chat(id),
@@ -45,6 +45,17 @@ CREATE TABLE `File`(
     file_name VARCHAR(30),
     file_path VARCHAR(260),
     mime_type VARCHAR(128) 
+);
+
+CREATE TABLE Job (
+    id CHAR(36) PRIMARY KEY
+);
+
+CREATE TABLE Escrow (
+    id CHAR(36) PRIMARY KEY,
+    job_id CHAR(36),
+    worker_id CHAR(36),
+    amount FLOAT
 );
 
 -- CREATE TABLE `Attachment`(
