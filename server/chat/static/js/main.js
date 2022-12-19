@@ -60,11 +60,17 @@ const updateChatHistoryUI = (data) => {
 
 const updateChatDetailUI = () => {};
 
-const openChat = (e) => {
-  current_chat = parseInt(e.dataset.chat_id);
+const openChat = (target) => {
+  current_chat = parseInt(target.dataset.chat_id);
   loadChatHistory(current_chat, user_token).then((data) =>
     updateChatHistoryUI(data)
   );
+
+  document
+    .querySelectorAll("chat-item")
+    .forEach((chatItem) => chatItem.classList.toggle("active", false));
+
+  target.classList.toggle("active", true);
 };
 
 // Socket Event Handling

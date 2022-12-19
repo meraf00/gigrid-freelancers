@@ -3,6 +3,116 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
+<header>
+    <h1 id="main-title">
+        Freelancers
+    </h1>
 
-Hello {{current_user.firstname}} [{{current_user.user_type}}]
+    <h3>A simple way to conduct business</h3>
+
+    <div class="call-to-action">
+        <button onclick='window.location.href="{{url_for("register")}}"'>Get Started</button>
+        <button>Learn how it works</button>
+    </div>
+</header>
+
+<section>
+    <h1>Services</h1>
+    
+    <div class="cards-container"> 
+        <button class="left"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i></button>                        
+        <button class="right"><i class="fa fa-chevron-circle-right fa-2x" aria-hidden="true"></i></button>
+        <div class="cards">                
+            <div class="card">
+                <h1 class="card-title">Copy Writing</h1>
+                <h2 class="card-desc"></h2>
+                <div class="card-img">
+                    <img src="../../ui-mockups/sitemap/FSE-project-sitemap.png" alt="">
+                </div>
+            </div>
+            <div class="card">
+                <h1 class="card-title">Copy Writing</h1>
+                <h2 class="card-desc"></h2>
+                <div class="card-img">
+                    <img src="../../ui-mockups/sitemap/FSE-project-sitemap.png" alt="">
+                </div>
+            </div>
+            <div class="card">
+                <h1 class="card-title">Copy Writing</h1>
+                <h2 class="card-desc"></h2>
+                <div class="card-img">
+                    <img src="../../ui-mockups/sitemap/FSE-project-sitemap.png" alt="">
+                </div>
+            </div>
+            <div class="card">
+                <h1 class="card-title">Copy Writing</h1>
+                <h2 class="card-desc"></h2>
+                <div class="card-img">
+                    <img src="../../ui-mockups/sitemap/FSE-project-sitemap.png" alt="">
+                </div>
+            </div>
+            <div class="card">
+                <h1 class="card-title">Copy Writing</h1>
+                <h2 class="card-desc"></h2>
+                <div class="card-img">
+                    <img src="../../ui-mockups/sitemap/FSE-project-sitemap.png" alt="">
+                </div>
+            </div>
+            <div class="card">
+                <h1 class="card-title">Copy Writing</h1>
+                <h2 class="card-desc"></h2>
+                <div class="card-img">
+                    <img src="../../ui-mockups/sitemap/FSE-project-sitemap.png" alt="">
+                </div>
+            </div>
+        </div>                       
+    </div>
+</section>
+
+<section>
+    <h1>Explore Categories</h1>
+
+    <div class="category-container">
+        <div class="category">
+            <div class="icon">
+                <i class="fa fa-handshake fa-xl" aria-hidden="true"></i>                
+            </div>
+            <p class="desc">
+                Business
+            </p>
+        </div>
+        <div class="category">
+            <div class="icon">
+                <i class="fa fa-code fa-xl" aria-hidden="true"></i>                
+            </div>
+            <p class="desc">
+                Programming &amp; Tech
+            </p>
+        </div>
+        <div class="category">
+            <div class="icon">
+                <i class="fa fa-book fa-xl" aria-hidden="true"></i>                
+            </div>
+            <p class="desc">
+                Writing
+            </p>
+        </div>
+        <div class="category">
+            <div class="icon">
+                <i class="fa fa-code fa-xl" aria-hidden="true"></i>                
+            </div>
+            <p class="desc">
+                Programming
+            </p>
+        </div>
+        <div class="category">
+            <div class="icon">
+                <i class="fa fa-code fa-xl" aria-hidden="true"></i>                
+            </div>
+            <p class="desc">
+                Programming
+            </p>
+        </div>
+    </div>
+</section>
 {% endblock %}

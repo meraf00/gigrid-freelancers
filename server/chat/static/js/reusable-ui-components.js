@@ -12,7 +12,7 @@ const user = (avater, username, text) => `
 
 const textMessageComponent = (content, time, sent = "") => `
 <div class="${"text-message " + sent}">
-    <p class="content">${content}</p>
+    <div class="content">${content}</div>
     <div class="time">${time}</div>
 </div>`;
 

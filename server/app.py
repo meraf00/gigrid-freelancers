@@ -36,6 +36,11 @@ def load_user(user_id):
     return User.get(user_id)
 
 
+@login_manager.unauthorized_handler
+def unauthorized():
+    return redirect(url_for('login'))
+
+
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -61,6 +66,7 @@ def login():
 
 
 @app.route("/logout")
+@login_required
 def logout():
     user = User.get(current_user.id)
     user.token = None
@@ -70,28 +76,59 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route("/register", methods=["GET", "POST"])
+@app.route("/register")
 def register():
+    return render_template("choose_account.html")
+
+
+@app.route("/register-freelancer", methods=["GET", "POST"])
+def register_freelancer():
     if request.method == "POST":
         fname = request.form.get("firstname")
         lname = request.form.get("lastname")
+        date = request.form.get("date")
         email = request.form.get("email")
         password = request.form.get("password")
 
         new_user = User(firstname=fname, lastname=lname,
                         email=email, password=generate_password_hash(password),
-                        date_of_birth=datetime.now(), user_type=UserType.FREELANCER)
+                        date_of_birth=date, user_type=UserType.FREELANCER)
 
         try:
             db.session.add(new_user)
             db.session.commit()
         except IntegrityError:
             db.session.rollback()
-            return render_template("register.html", message="Email already exists")
+            return render_template("register.html", message="Email already exists", register_handler="register_freelancer")
 
         return redirect(url_for('login'))
 
-    return render_template("register.html")
+    return render_template("register.html", register_handler="register_freelancer")
+
+
+@app.route("/register-employer", methods=["GET", "POST"])
+def register_employer():
+    if request.method == "POST":
+        fname = request.form.get("firstname")
+        lname = request.form.get("lastname")
+        date = request.form.get("date")
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        new_user = User(firstname=fname, lastname=lname,
+                        email=email, password=generate_password_hash(password),
+                        date_of_birth=date, user_type=UserType.EMPLOYER)
+
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            return render_template("register.html", message="Email already exists", register_handler="register_employer")
+
+        return redirect(url_for('login'))
+
+    return render_template("register.html", register_handler="register_employer")
 
 
 @app.route('/files/<id>')

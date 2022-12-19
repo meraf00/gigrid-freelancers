@@ -1,36 +1,26 @@
-* {
+section,
+header {
+  padding: 0.1rem 0;
   margin: 0;
-  padding: 0;
 }
 
-nav {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.3rem 1rem;
-  align-items: center;
-  box-shadow: 0 1px 5px rgba(128, 128, 128, 0.555);
+button {
+  background-color: transparent;
+  border: none;
+  color: var(--primary-fg);
 }
 
-nav ul {
-  display: flex;
-  align-items: center;
-}
-
-nav li {
-  list-style: none;
-  padding: 0 1rem;
+button:hover {
+  background-color: transparent;
+  color: var(--link-hover);
 }
 
 section {
   position: relative;
 }
 
-.logo img,
-.avater img {
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 1px solid gray;
-  border-radius: 50%;
+header {
+  display: block;
 }
 
 .main {
@@ -46,19 +36,31 @@ section {
   margin-bottom: 0.5rem;
 }
 
+.chat-item.active {
+  background-color: powderblue;
+}
+.chat-item.active .text {
+  color: var(--link);
+}
+
+.chat-item:hover {
+  background-color: powderblue;
+}
+.chat-item:hover .text {
+  color: var(--primary-fg);
+}
+
 .chat-item .group {
   margin-left: 0.75rem;
 }
 
 .chat-item .username {
   font-size: medium;
-  font-family: Georgia, "Times New Roman", Times, serif;
   margin-bottom: 0.3rem;
 }
 
 .chat-item .text {
   color: gray;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   max-width: 10rem;
   white-space: nowrap;
   overflow: hidden;
@@ -94,8 +96,13 @@ section {
   margin-bottom: 0.75rem;
   border: 1px solid blueviolet;
   background-color: powderblue;
-  border-radius: 0.4rem;
+  border-radius: var(--radius);
   max-width: 40%;
+}
+
+.text-message {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.5rem;
 }
 
 .text-message.sent,
@@ -103,7 +110,7 @@ section {
   align-self: end;
 }
 
-.text-message .content {
+.file-message .content {
   margin-bottom: 0.5rem;
   padding: 0 0.3rem;
 }
@@ -166,10 +173,6 @@ form > label[for="file"] {
 
 #clear-file {
   cursor: pointer;
-}
-
-* {
-  /* outline: rgba(162, 201, 162, 0.527) solid 1px; */
 }
 
 @media (max-width: 700px) {

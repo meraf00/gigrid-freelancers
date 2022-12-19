@@ -4,18 +4,43 @@
 
 {% block body %}
 {{message}}
-<form action="{{url_for('register')}}" method="post">
+<header class="auth">
+    <h3>Sign up</h3>
 
-    <div>
-        <input type="text" placeholder="firstname" name="firstname">
-        <input type="text" placeholder="lastname" name="lastname">
-    </div>
-    <label for="email-field">Email</label>
-    <input type="text" name="email" id="email-field" />
+    <form class="auth" action="{{url_for(register_handler)}}" method="post">
+        <div class="field">
+            <label for="firstname">First name</label>
+            <input id="firstname" name="firstname" type="text" placeholder="First name" required>
+        </div>
+        
+        <div class="field">
+            <label for="lastname">Last name</label>
+            <input id="lastname" name="lastname" type="text" placeholder="Last name" required>
+        </div>
 
-    <label for="password-field">Password</label>
-    <input type="password" name="password" id="password-field" />
+        <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="Email" required>
+        </div>
 
-    <input type="submit" />
-</form>
+        <div class="field">
+            <label for="date">Date of birth</label>
+            <input id="date" name="date" type="date" required>
+        </div>
+
+        <div class="field">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="Password" required>
+        </div>
+
+        <div class="field">
+            <label for="password">Confirm password</label>
+            <input id="password" name="confirm_password" type="password" placeholder="Confirm password" required>
+        </div>
+
+        <div class="flex-center">                
+            <input type="submit" value="Sign up">
+        </div>
+    </form>              
+</header>
 {% endblock %}

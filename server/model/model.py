@@ -14,7 +14,7 @@ class UserType:
     """Data class to represent types of users involved in the system"""
 
     FREELANCER = 'FREELANCER'
-    EMPLOYER = 'FREELANCER'
+    EMPLOYER = 'EMPLOYER'
 
 
 class ContentType:
@@ -48,7 +48,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(100))
     password = db.Column(db.String(100))
     date_of_birth = db.Column(db.DateTime)
-    user_type = db.Column(db.Enum(UserType.FREELANCER, UserType.FREELANCER))
+    user_type = db.Column(db.Enum(UserType.FREELANCER, UserType.EMPLOYER))
     token = db.Column(db.String(200))
 
     @property
