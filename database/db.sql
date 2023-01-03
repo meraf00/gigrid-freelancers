@@ -13,7 +13,8 @@ CREATE TABLE User(
     `password` VARCHAR(300) NOT NULL,
     date_of_birth DATETIME NOT NULL,
     user_type ENUM('FREELANCER', 'EMPLOYER'),
-    token VARCHAR(200)
+    token VARCHAR(200),
+    balance FLOAT DEFAULT 0
 );
 
 
@@ -49,6 +50,7 @@ CREATE TABLE `File`(
 
 CREATE TABLE Job (
     id CHAR(36) PRIMARY KEY,
+    title VARCHAR(50) NOT NULL,
     `description` VARCHAR(500) NOT NULL,
     experience_level ENUM('ENTRY', 'INTERMEDIATE', 'EXPERT') NOT NULL,
     attachment CHAR(36) not null,
@@ -85,9 +87,9 @@ CREATE TABLE `Attachment`(
     PRIMARY KEY (id, file_id)
 );
 
-CREATE TABLE UserBalance (
+CREATE TABLE User_balance (
     user_id INT PRIMARY KEY,
-    balance FLOAT NOT NULL DEFAULT 0
+    amount FLOAT NOT NULL DEFAULT 0
 );
 
 create table if not exists Proposal(

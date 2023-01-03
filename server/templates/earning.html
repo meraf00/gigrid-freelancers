@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}My Earnings{% endblock %}
+
+{% block body %}
+
+<section>
+    <h2>
+        Earning
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Job</th>
+                <th>Payment</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job_history in current_user.job_history %}
+            <tr>
+                <td>{{job_history.job.title}}</td>
+                <td>{{job_history.payment}}</td>
+                <td>{{job_history.completion_date}}</td>
+            </tr>
+            {% endfor %}
+            <tr></tr>
+        </tbody>
+    </table>
+
+    <h2>Total earning: {{current_user.balance}}</h2>
+</section>
+{% endblock %}

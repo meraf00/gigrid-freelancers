@@ -44,8 +44,9 @@ class User(db.Model, UserMixin):
         email (str): user's email
         password (str): user's hashed password
         date_of_birth (datetime): user's birth date
-        user_type (str): one of supported user types specified under UserType class
-        user_type (token): user's authentication token
+        user_type (str): one of supported user types specified under UserType class        
+        token (str): user's authentication token
+        balance (float): the amount of money a user has in the system
         initiated_chats (list[Chat]): list of Chat objects initiated by this user
         joined_chats (list[Chat]): list of Chat objects joined by this user
     """
@@ -58,6 +59,7 @@ class User(db.Model, UserMixin):
     date_of_birth = db.Column(db.DateTime)
     user_type = db.Column(db.Enum(UserType.FREELANCER, UserType.EMPLOYER))
     token = db.Column(db.String(200))
+    balance = db.Column(db.Float)
 
     @property
     def chats(self):
@@ -244,16 +246,17 @@ class Job(db.Model):
     id = db.Column(db.String(36), primary_key=True)
     description = db.Column(db.String(500))
     experience_level = db.Column(
-                            db.Enum(
-                                ExperienceLevel.ENTRY, 
-                                ExperienceLevel.INTERMEDIATE,
-                                ExperienceLevel.EXPERT)
-                        )
+        db.Enum(
+            ExperienceLevel.ENTRY,
+            ExperienceLevel.INTERMEDIATE,
+            ExperienceLevel.EXPERT)
+    )
 
 
 class Attachement(db.Model):
     id = db.Column(db.String(36), primary_key=True)
-    file_id = db.Column(db.String(36), db.ForeignKey(File.id), primary_key=True)            
+    file_id = db.Column(db.String(36), db.ForeignKey(
+        File.id), primary_key=True)
 
 
 class Contract(db.Model):
@@ -275,7 +278,8 @@ class Contract(db.Model):
     deadline = db.Column(db.DateTime)
 
     job = db.relationship(Job, backref='contract', foreign_keys=[job_id])
-    worker = db.relationship(User, backref='contract', foreign_keys=[worker_id])
+    worker = db.relationship(User, backref='contract',
+                             foreign_keys=[worker_id])
 
 
 class Escrow(db.Model):
@@ -290,11 +294,11 @@ class Escrow(db.Model):
     """
 
     id = db.Column(db.String(36), primary_key=True)
-    contract_id = db.Column(db.String(36), db.ForeignKey(Contract.id))    
+    contract_id = db.Column(db.String(36), db.ForeignKey(Contract.id))
     amount = db.Column(db.Float)
     date_of_initiation = db.Column(db.DateTime, default=datetime.now)
 
-    contract = db.relationship(Contract, backref='escrow')    
+    contract = db.relationship(Contract, backref='escrow')
 
     @staticmethod
     def get(escrow_id: str) -> Optional[Escrow]:
@@ -313,30 +317,31 @@ class Escrow(db.Model):
         return f"Escrow(id={self.id}, job={self.job_id}, to={self.worker_id}, amount={self.amount})"
 
 
-class UserBalance(db.Model):
-    """Represents user balance in the system
+# class UserBalance(db.Model):
+#     """Represents user balance in the system
 
-    Parameters:
-        user_id (int): the user id
-        balance (float): the amount of money (in ETB) in the balance
-    """
+#     Parameters:
+#         user_id (int): the user id
+#         balance (float): the amount of money (in ETB) in the balance
+#     """
 
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
-    balance = db.Column(db.Float)    
+#     user_id = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
+#     amount = db.Column(db.Float)
 
-    @staticmethod
-    def get(user_id: str) -> Optional[UserBalance]:
-        """Gets balance of user
+#     user = db.relationship(User, backref=db.backref("balance", uselist=False), uselist=False)
 
-        Args:
-            user_id (str): user id
+#     @staticmethod
+#     def get(user_id: str) -> Optional[UserBalance]:
+#         """Gets balance of user
 
-        Returns:
-            UserBalance: UserBalance object if user is found, None otherwise
-        """
+#         Args:
+#             user_id (str): user id
 
-        return UserBalance.query.filter_by(id=user_id).first()
+#         Returns:
+#             UserBalance: UserBalance object if user is found, None otherwise
+#         """
 
-    def __repr__(self):
-        return f"UserBalance(user_id={self.id}, balance={self.balance})"
+#         return UserBalance.query.filter_by(id=user_id).first()
 
+#     def __repr__(self):
+#         return f"UserBalance(user_id={self.user_id}, balance={self.amount})"
