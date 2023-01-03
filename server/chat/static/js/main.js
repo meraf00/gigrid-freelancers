@@ -1,4 +1,5 @@
-BASE_URL = "http://localhost:5000";
+const url = new URL(document.URL);
+BASE_URL = `http://${url.hostname}:${url.port}`;
 
 // Socket Events
 CONNECT = "connect";
