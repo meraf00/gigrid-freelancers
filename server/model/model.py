@@ -17,6 +17,14 @@ class UserType:
     EMPLOYER = 'EMPLOYER'
 
 
+class ExperienceLevel:
+    """Data class to represent experience level required by the job."""
+
+    ENTRY = 'ENTRY'
+    INTERMEDIATE = 'INTERMEDIATE'
+    EXPERT = "EXPERT"
+
+
 class ContentType:
     """Data class to represent types of message contents supported by messaging functionality"""
 
@@ -234,16 +242,59 @@ class File(db.Model):
 
 class Job(db.Model):
     id = db.Column(db.String(36), primary_key=True)
+    description = db.Column(db.String(500))
+    experience_level = db.Column(
+                            db.Enum(
+                                ExperienceLevel.ENTRY, 
+                                ExperienceLevel.INTERMEDIATE,
+                                ExperienceLevel.EXPERT)
+                        )
 
 
-class Escrow(db.Model):
+class Attachement(db.Model):
+    id = db.Column(db.String(36), primary_key=True)
+    file_id = db.Column(db.String(36), db.ForeignKey(File.id), primary_key=True)            
+
+
+class Contract(db.Model):
+    """Contract is created when worker and job poster reach on agreement
+
+    Parameters:
+        id (str): unique contract id
+        job_id (str): the job id
+        worker_id (str): the freelancer id
+        deadline (datetime): last date for work submission
+
+    `If the contract is not fullfilled before deadline, fund in escrow will 
+    be refunded to job owner`
+    """
+
     id = db.Column(db.String(36), primary_key=True)
     job_id = db.Column(db.String(36), db.ForeignKey(Job.id))
     worker_id = db.Column(db.String(36), db.ForeignKey(User.id))
-    amount = db.Column(db.Float)
+    deadline = db.Column(db.DateTime)
 
-    job = db.relationship(Job, backref='escrow', foreign_keys=[job_id])
-    # to = db.relationship(User, backref='escrow', foreign_keys=[worker_id])
+    job = db.relationship(Job, backref='contract', foreign_keys=[job_id])
+    worker = db.relationship(User, backref='contract', foreign_keys=[worker_id])
+
+
+class Escrow(db.Model):
+    """Escrow holds funds transfered from job owner to the system.
+    When contract is fullfilled fund will be released to worker.
+
+    Parameters:
+        id (str): unique escrow id
+        contract_id (str): the contract id
+        amount (float): amount (in ETB) to be trasfered to worker when contract is fullfilled
+        date_of_initiation (datetime): date when escrow was funded
+    """
+
+    id = db.Column(db.String(36), primary_key=True)
+    contract_id = db.Column(db.String(36), db.ForeignKey(Contract.id))    
+    amount = db.Column(db.Float)
+    date_of_initiation = db.Column(db.DateTime, default=datetime.now)
+
+    contract = db.relationship(Contract, backref='escrow')    
 
     @staticmethod
     def get(escrow_id: str) -> Optional[Escrow]:
@@ -260,3 +311,32 @@ class Escrow(db.Model):
 
     def __repr__(self):
         return f"Escrow(id={self.id}, job={self.job_id}, to={self.worker_id}, amount={self.amount})"
+
+
+class UserBalance(db.Model):
+    """Represents user balance in the system
+
+    Parameters:
+        user_id (int): the user id
+        balance (float): the amount of money (in ETB) in the balance
+    """
+
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
+    balance = db.Column(db.Float)    
+
+    @staticmethod
+    def get(user_id: str) -> Optional[UserBalance]:
+        """Gets balance of user
+
+        Args:
+            user_id (str): user id
+
+        Returns:
+            UserBalance: UserBalance object if user is found, None otherwise
+        """
+
+        return UserBalance.query.filter_by(id=user_id).first()
+
+    def __repr__(self):
+        return f"UserBalance(user_id={self.id}, balance={self.balance})"
+
