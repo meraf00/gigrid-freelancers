@@ -48,19 +48,55 @@ CREATE TABLE `File`(
 );
 
 CREATE TABLE Job (
-    id CHAR(36) PRIMARY KEY
+    id CHAR(36) PRIMARY KEY,
+    `description` VARCHAR(500) NOT NULL,
+    experience_level ENUM('ENTRY', 'INTERMEDIATE', 'EXPERT') NOT NULL,
+    attachment CHAR(36) not null,
+    duration int not null,
+    budget float,
+    owner_id int not null,
+    post_time DATETIME not null DEFAULT NOW()
+);
+
+CREATE TABLE Contract (
+    id CHAR(36) PRIMARY KEY,
+    job_id CHAR(36) NOT NULL,
+    worker_id INT NOT NULL,
+    deadline DATETIME NOT NULL,    
+
+    FOREIGN KEY (worker_id) REFERENCES User(id),
+    FOREIGN KEY (job_id) REFERENCES Job(id)
 );
 
 CREATE TABLE Escrow (
     id CHAR(36) PRIMARY KEY,
-    job_id CHAR(36),
-    worker_id CHAR(36),
-    amount FLOAT
+    contract_id CHAR(36) NOT NULL,
+    amount FLOAT NOT NULL,
+    date_of_initiation DATETIME NOT NULL DEFAULT NOW(),
+
+    FOREIGN KEY (contract_id) REFERENCES Contract(id)
 );
 
--- CREATE TABLE `Attachment`(
---     id INT PRIMARY KEY,
---     file_id VARCHAR(36),
+CREATE TABLE `Attachment`(
+    id CHAR(36) NOT NULL,
+    file_id CHAR(36) NOT NULL,
 
---     FOREIGN KEY (file_id) REFERENCES `File`(id)
--- );
+    FOREIGN KEY (file_id) REFERENCES `File`(id),
+    PRIMARY KEY (id, file_id)
+);
+
+CREATE TABLE UserBalance (
+    user_id INT PRIMARY KEY,
+    balance FLOAT NOT NULL DEFAULT 0
+);
+
+create table if not exists Proposal(
+    worker_id INT not null,
+    content varchar(500),
+    attachment CHAR(36),
+    job_id CHAR(36) not null,
+    sent_time datetime not null,
+    
+    foreign key (worker_id) references User(id),
+    foreign key (job_id) references Job(id)
+);
