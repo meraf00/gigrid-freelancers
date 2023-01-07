@@ -43,7 +43,6 @@ def unauthorized():
 
 @app.route("/")
 def home():
-    print(current_user.balance.amount)
     return render_template("home.html")
 
 
@@ -98,10 +97,10 @@ def register_freelancer():
 
         new_user = User(firstname=fname, lastname=lname,
                         email=email, password=generate_password_hash(password),
-                        date_of_birth=date, user_type=UserType.FREELANCER)                
+                        date_of_birth=date, user_type=UserType.FREELANCER)
 
         try:
-            db.session.add(new_user)            
+            db.session.add(new_user)
             db.session.commit()
         except IntegrityError:
             db.session.rollback()
