@@ -8,7 +8,7 @@ from utils import FileManager
 from model import User, UserType, Job, Attachement, File
 
 
-job_bp = Blueprint('chat_bp', __name__,
+job_bp = Blueprint('job_bp', __name__,
                     static_folder='static', template_folder='templates')
 
 file_mgr = FileManager(os.getenv('UPLOAD_FOLDER'))
