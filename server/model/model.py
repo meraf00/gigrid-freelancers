@@ -242,21 +242,99 @@ class File(db.Model):
         return f"File(id={self.id}, file_name={self.file_name}, mime_type={self.mime_type})"
 
 
-class Job(db.Model):
-    id = db.Column(db.String(36), primary_key=True)
-    description = db.Column(db.String(500))
-    experience_level = db.Column(
-        db.Enum(
-            ExperienceLevel.ENTRY,
-            ExperienceLevel.INTERMEDIATE,
-            ExperienceLevel.EXPERT)
-    )
-
-
 class Attachement(db.Model):
     id = db.Column(db.String(36), primary_key=True)
     file_id = db.Column(db.String(36), db.ForeignKey(
         File.id), primary_key=True)
+
+
+class Job(db.Model):
+    """Job database model
+
+    Parameters:
+        id (str): unique job id
+        title (str): title of job
+        description (str): description about the job
+        experience_level (str): required experience level
+        attachment_id (str): unique attachment id
+        duration (str): duration the job takes
+        budget (str): budget allocated for the job
+        owner_id (int): id of job poster
+        post_time (datetime): time of job post
+        attachment (Attachment): attachment file
+        owner (User): job poster
+    """
+
+    id = db.Column(db.String(36), primary_key=True)
+    title = db.Column(db.String(50))
+    description = db.Column(db.String(500))
+    experience_level = db.Column(
+                            db.Enum(
+                                ExperienceLevel.ENTRY,
+                                ExperienceLevel.INTERMEDIATE,
+                                ExperienceLevel.EXPERT))
+    attachement_id = db.Column(db.String(50), db.ForeignKey(Attachement.id))
+    duration = db.Column(db.String(50))
+    budget = db.column(db.String(50))
+    owner_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    post_time = db.Column(db.DateTime)
+
+    attachement = db.relationship(Attachement, foreign_keys=[attachement_id])
+    owner = db.relationship(User, foreign_key=[owner_id])
+
+    @staticmethod
+    def filter_job(key: str) -> Optional[Job]:
+        """Filters job using a key
+        
+        Args:
+            key (str): key word in - name of job
+                                   - description of job
+                                   - experience level of job
+        Returns:
+                Job: job object if job associated with they key is found, None otherwise
+        """
+
+        job = Job.query.filter(
+            db.or_(
+                Job.title == "%{}%".format(key),
+                Job.description == "%{}%".format(key),
+                Job.experience_level == key.upper()
+            )
+        )        
+        return job
+
+    # @staticmethod
+    # def create_job(title, description) -> None:
+    #     """Creates a job
+        
+    #     Args:
+    #         owner_id (int): job creator id
+
+    #     Returns:
+    #             None
+    #     """
+        
+            
+
+
+    @staticmethod
+    def get_job(owner_id: int) -> Optional[Job]:
+        """Gets jobs owned by user
+
+        Args:
+            owner_id (int): user id
+        
+        Returns:
+                Job: job object if job owned by user is found, None otherwise
+        """
+
+        job = Job.query.filter(
+            Job.owner_id == owner_id
+        )
+        return job
+
+    def __repr__(self):
+        return f"Job(id={self.id}, job_title={self.title}, experience_level={self.experience_level}, job_owner={self.owner_id}, post_time={self.post_time}, job_description={self.description})"
 
 
 class Contract(db.Model):
