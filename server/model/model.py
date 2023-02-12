@@ -5,6 +5,8 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 
+from flask import jsonify, make_response
+
 from typing import Optional
 
 db = SQLAlchemy()
@@ -98,6 +100,21 @@ class User(db.Model, UserMixin):
             User: user object if user is found, None otherwise
         """
         return User.query.filter_by(email=email).first()
+
+    def get_posted_jobs(self):
+        """Get jobs posted by an Employer
+
+        Args:
+            id (int): id of employer
+        Returns:
+            jobs (list): list of jobs with owner_id of id
+        """
+
+        job = Job.query.filter(
+            Job.owner_id == self.id
+        ).all()
+        
+        return job
 
     def __repr__(self):
         return f"User(id={self.id}, email={self.email})"
@@ -257,8 +274,7 @@ class Job(db.Model):
         description (str): description about the job
         experience_level (str): required experience level
         attachment_id (str): unique attachment id
-        duration (str): duration the job takes
-        budget (str): budget allocated for the job
+        budget (float): budget allocated for the job
         owner_id (int): id of job poster
         post_time (datetime): time of job post
         attachment (Attachment): attachment file
@@ -274,13 +290,12 @@ class Job(db.Model):
                                 ExperienceLevel.INTERMEDIATE,
                                 ExperienceLevel.EXPERT))
     attachement_id = db.Column(db.String(50), db.ForeignKey(Attachement.id))
-    duration = db.Column(db.String(50))
-    budget = db.column(db.String(50))
+    budget = db.Column(db.Float)
     owner_id = db.Column(db.Integer, db.ForeignKey(User.id))
-    post_time = db.Column(db.DateTime)
+    post_time = db.Column(db.DateTime, default=datetime.now)
 
     attachement = db.relationship(Attachement, foreign_keys=[attachement_id])
-    owner = db.relationship(User, foreign_key=[owner_id])
+    owner = db.relationship(User, foreign_keys=[owner_id])
 
     @staticmethod
     def filter_job(key: str) -> Optional[Job]:
@@ -303,19 +318,6 @@ class Job(db.Model):
         )        
         return job
 
-    # @staticmethod
-    # def create_job(title, description) -> None:
-    #     """Creates a job
-        
-    #     Args:
-    #         owner_id (int): job creator id
-
-    #     Returns:
-    #             None
-    #     """
-        
-            
-
 
     @staticmethod
     def get_job(owner_id: int) -> Optional[Job]:
@@ -332,6 +334,7 @@ class Job(db.Model):
             Job.owner_id == owner_id
         )
         return job
+        
 
     def __repr__(self):
         return f"Job(id={self.id}, job_title={self.title}, experience_level={self.experience_level}, job_owner={self.owner_id}, post_time={self.post_time}, job_description={self.description})"

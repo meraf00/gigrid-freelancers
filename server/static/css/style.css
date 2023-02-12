@@ -307,6 +307,51 @@ input[type="submit"] {
   border-radius: var(--radius);
 }
 
+
+/* column card */
+.ccards {
+  margin: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.ccard {
+  background: #f0d1e4;
+  padding: 1rem;
+  margin: 1rem;
+  display: flex;
+  align-items: center;
+  border-radius: 1rem;
+  box-shadow: 0.1rem 0.1rem 1rem var(--shadow);
+}
+
+.ccard-img {
+  margin-right: 2rem;
+}
+
+.ccard-title {
+  font-size: 2rem;
+}
+
+.search {
+  display: flex;
+  gap: 3rem;
+}
+
+.search-bar {
+  width: 30rem;
+}
+
+/* form */
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  margin: 1rem;
+}
+
 @media (max-width: 700px) {
   header,
   section,

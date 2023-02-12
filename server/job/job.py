@@ -1,11 +1,12 @@
 import os
 import json
-from flask import Flask, Blueprint, render_template, request, redirect
+from flask import Flask, Blueprint, render_template, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_required, current_user
 from utils import FileManager
+from uuid import uuid4
 
-from model import User, UserType, Job, Attachement, File
+from model import User, UserType, Job, Attachement, File, db
 
 
 job_bp = Blueprint('job_bp', __name__,
@@ -28,19 +29,43 @@ def job():
 @login_required
 def post():
     if request.method == "POST":
+        id = uuid4()
         title = request.form.get("title")
         description = request.form.get("description")
         experience_level = request.form.get("experience-level")
         budget = request.form.get("budget")
-        duration = request.form.get("duration")
+        owner_id = current_user.id
 
-        new_job = Job(title=title, description=description, 
+        new_job = Job(id=id, title=title, description=description, 
                         experience_level=experience_level,
-                        budget=budget, duration=duration
+                        budget=budget, owner_id=owner_id
         )
 
         db.session.add(new_job)
         db.session.commit()
+
+        return render_template('posted_job.html')
+  
+
+@job_bp.route('/myjobs', methods=['GET'])
+@login_required
+def see_posted_jobs():
+    jobs = current_user.get_posted_jobs()
+    jsonList = []
+    for job in jobs:
+        jsonList.append({"id": job.id, 
+                         "title": job.title, 
+                         "desc": job.description, 
+                         "experience_level": job.experience_level,
+                         "owner_id": job.owner_id,
+                         "budget": job.budget
+                         })
+    response = make_response(
+                jsonify(jsonList),
+                200
+            )
+    response.headers["Content-Type"] = "application/json"
+    return response
 
 
 @job_bp.route('/uploadfile', methods=['POST'])

@@ -8,11 +8,12 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{% block title %}{% endblock %}</title>
+    <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="..\static\css\dark-theme.css">
     <link rel="stylesheet" href="..\static\css\light-theme.css">
-    <link rel="stylesheet" id="dark-theme" href="..\static\css\dark-theme.css" disabled>
     
     <link rel="stylesheet" href="..\static\css\style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,37 +24,47 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
         integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    {% block head %}{% endblock %}
 </head>
 
 <body>
     <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
+        <![endif]-->
+
     <nav>
-        <div class="logo"><a href="{{url_for('home')}}"><img src="Logo" alt="">Logo</a></div>
-    
+        <div class="logo"><img src="" alt="">Logo</div>
+
         <ul>
-            {% if current_user.firstname %}
-            <li><a href="/earnings">My Earning</a></li>
-            <li><a href="{{url_for('job_bp.job')}}">My Jobs</a></li>
-            <li><a href="{{url_for('chat_bp.message')}}">Messages</a></li>
-            {% endif %}
-    
+            <li><a href="#">My Earning</a></li>
+            <li><a href="#">My Jobs</a></li>
+            <li><a href="#">Messages</a></li>
             <li><a href="#">Explore</a></li>
-            
-            {% if current_user.firstname %}
-            <li><a href="{{url_for('logout')}}">Log out</a></li>
-            {% else %}
-            <li><a href="{{url_for('login')}}">Log in</a></li>
-            <li><a href="{{url_for('register')}}">Sign up</a></li>
-            {% endif %}
-    
-            <li><a href="#" onclick="toggleTheme()"><i class="fas fa-circle-half-stroke" aria-hidden="true"></i></a></li>
+            <li><a href="#">Log in</a></li>
+            <li><a href="#">Sign up</a></li>
+            <li><a href="#"><i class="fas fa-circle-half-stroke" aria-hidden="true"></i></a></li>
         </ul>        
     </nav>
-
-    {% block body %}{% endblock %}
+    <section>
+        <form action="" class="form">
+            <div class="input">
+                <label for="job-title">Job Title</label>
+            <input type="text" name="job-title" id="job-title">
+            </div>
+            <div class="input">
+                <label for="description">Description</label>
+                <input type="text" name="description" id="job-title">
+            </div>
+            <div class="input">
+                <label for="experience">Experience Level</label>
+                <input type="text" name="experience" id="experience">                
+            </div>
+            <div class="input">
+                <label for="budget">Budget</label>
+                <input type="text" name="budget" id="budget">                
+            </div>
+        </form>
+        <button type="submit">Post Job</button>
+    </section>
 
     <footer>
         <div class="footer-top">
@@ -88,9 +99,9 @@
         </div>
         
         <div class="copyright">            
-    
+
             <p>Freelancers &copy; 2022</p>
-    
+
             <ul class="contacts">
                 <li><a href="#"><i class="fab fa-telegram" aria-hidden="true"></i></a></li>
                 <li><a href="#"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
@@ -99,26 +110,8 @@
             </ul>
         </div>
     </footer>
-    
-    <input type="hidden" id="user_token" value="{{current_user.token}}">
-        
-    <script>        
-        const toggleTheme = () => {
-            document.getElementById("dark-theme").disabled = !document.getElementById("dark-theme").disabled; 
 
-            if (document.getElementById("dark-theme").disabled) {
-                localStorage.setItem("theme", "light");   
-            }     
-            else {
-                localStorage.setItem("theme", "dark");   
-            }          
-        }
-
-        window.onload = () => {
-            if (localStorage.getItem("theme") === "dark")
-            document.getElementById("dark-theme").disabled = false; 
-        }
-    </script>
+    <script src="" async defer></script>
 </body>
 
 </html>

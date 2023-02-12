@@ -1,1 +1,1 @@
-from job import job_bp
+from .job import job_bp
