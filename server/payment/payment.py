@@ -24,7 +24,7 @@ def deposite():
     amount = request.args.get("amount")
 
     ref = f'TX-{uuid4()}'
-    print(ref, amount, current_user.email)
+    
     checkout_url = payment_handler.generate_checkout_url({
         'amount': amount,
         'currency': 'ETB',
@@ -51,4 +51,5 @@ def verify_transaction():
         user.balance += data["amount"]
         db.session.commit()
 
-    return str(payment_handler.verify_transaction("TX-730af38a-a450-42ef-a246-1e51385d592b"))
+        return jsonify(True)
+    return jsonify(False)
