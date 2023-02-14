@@ -269,16 +269,24 @@ form.auth div {
   margin: 0.5rem auto;
 }
 
-.field input {
+textarea, input {
   display: block;
-  margin: auto;
   padding: 0.7rem 1rem;
   outline: none;
   background-color: var(--secondary-fg);
-  border: 1px solid var(--secondary-bg);
+  border: 1px solid var(--secondary-bg);  
+  font-size: 1rem;  
   width: 18rem;
-  font-size: 1rem;
 }
+
+textarea {
+  width: 36rem;
+}
+
+.field input {    
+  margin: auto;  
+}
+
 
 input[type="submit"] {
   padding: 0.7rem 1rem;
@@ -316,12 +324,11 @@ input[type="submit"] {
 }
 
 .ccard {
-  background: #f0d1e4;
+  background: var(--primary-bg);
   padding: 1rem;
   margin: 1rem;
   display: flex;
-  align-items: center;
-  border-radius: 1rem;
+  align-items: center;  
   box-shadow: 0.1rem 0.1rem 1rem var(--shadow);
 }
 
@@ -330,7 +337,22 @@ input[type="submit"] {
 }
 
 .ccard-title {
-  font-size: 2rem;
+  font-size: 1.3rem;
+  margin-bottom: .5rem;
+  font-weight: bold;
+}
+
+.ccard-desc{
+ padding-bottom: .5rem;
+}
+
+.ccard-xp{
+ font-size: 1rem;
+color: var(--primary-fg)
+}
+
+.ccard-budget, .ccard-title {
+  color: var(--secondary-bg)
 }
 
 .search {
@@ -350,6 +372,18 @@ input[type="submit"] {
 
 .input {
   margin: 1rem;
+}
+
+button.tab {
+  background-color: var(--primary-bg);
+  color: var(--primary-fg);
+  border: none;
+  border-bottom: 1px solid transparent;
+}
+
+button.tab:hover,
+button.tab.active {
+  border-bottom: 1px solid var(--secondary-bg);
 }
 
 @media (max-width: 700px) {

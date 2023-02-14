@@ -4,7 +4,7 @@
 }
 
 .card {
-    background: #daf0ef;
+    background: var(--primary-bg);
     position: relative;
 }
 
@@ -30,5 +30,13 @@
 
 .post-form.show {
     display: block;
+}
+
+.posted-jobs {
+    display: none
+}
+
+.posted-jobs.show {
+    display: block
 }
 

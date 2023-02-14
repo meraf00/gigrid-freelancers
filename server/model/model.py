@@ -5,8 +5,6 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 
-from flask import jsonify, make_response
-
 from typing import Optional
 
 db = SQLAlchemy()
@@ -113,7 +111,7 @@ class User(db.Model, UserMixin):
         job = Job.query.filter(
             Job.owner_id == self.id
         ).all()
-        
+
         return job
 
     def __repr__(self):
@@ -285,10 +283,10 @@ class Job(db.Model):
     title = db.Column(db.String(50))
     description = db.Column(db.String(500))
     experience_level = db.Column(
-                            db.Enum(
-                                ExperienceLevel.ENTRY,
-                                ExperienceLevel.INTERMEDIATE,
-                                ExperienceLevel.EXPERT))
+        db.Enum(
+            ExperienceLevel.ENTRY,
+            ExperienceLevel.INTERMEDIATE,
+            ExperienceLevel.EXPERT))
     attachement_id = db.Column(db.String(50), db.ForeignKey(Attachement.id))
     budget = db.Column(db.Float)
     owner_id = db.Column(db.Integer, db.ForeignKey(User.id))
@@ -300,7 +298,7 @@ class Job(db.Model):
     @staticmethod
     def filter_job(key: str) -> Optional[Job]:
         """Filters job using a key
-        
+
         Args:
             key (str): key word in - name of job
                                    - description of job
@@ -315,9 +313,8 @@ class Job(db.Model):
                 Job.description == "%{}%".format(key),
                 Job.experience_level == key.upper()
             )
-        )        
+        )
         return job
-
 
     @staticmethod
     def get_job(owner_id: int) -> Optional[Job]:
@@ -325,7 +322,7 @@ class Job(db.Model):
 
         Args:
             owner_id (int): user id
-        
+
         Returns:
                 Job: job object if job owned by user is found, None otherwise
         """
@@ -334,7 +331,6 @@ class Job(db.Model):
             Job.owner_id == owner_id
         )
         return job
-        
 
     def __repr__(self):
         return f"Job(id={self.id}, job_title={self.title}, experience_level={self.experience_level}, job_owner={self.owner_id}, post_time={self.post_time}, job_description={self.description})"

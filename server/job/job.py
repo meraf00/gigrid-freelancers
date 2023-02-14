@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, Blueprint, render_template, request, jsonify, make_response
+from flask import Blueprint, render_template, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_required, current_user
 from utils import FileManager
@@ -10,7 +10,7 @@ from model import User, UserType, Job, Attachement, File, db
 
 
 job_bp = Blueprint('job_bp', __name__,
-                    static_folder='static', template_folder='templates')
+                   static_folder='static', template_folder='templates')
 
 file_mgr = FileManager(os.getenv('UPLOAD_FOLDER'))
 
@@ -24,7 +24,6 @@ def job():
         return render_template('filter_job.html')
 
 
-
 @job_bp.route('/post', methods=['POST'])
 @login_required
 def post():
@@ -36,16 +35,16 @@ def post():
         budget = request.form.get("budget")
         owner_id = current_user.id
 
-        new_job = Job(id=id, title=title, description=description, 
-                        experience_level=experience_level,
-                        budget=budget, owner_id=owner_id
-        )
+        new_job = Job(id=id, title=title, description=description,
+                      experience_level=experience_level,
+                      budget=budget, owner_id=owner_id
+                      )
 
         db.session.add(new_job)
         db.session.commit()
 
         return render_template('posted_job.html')
-  
+
 
 @job_bp.route('/myjobs', methods=['GET'])
 @login_required
@@ -53,17 +52,17 @@ def see_posted_jobs():
     jobs = current_user.get_posted_jobs()
     jsonList = []
     for job in jobs:
-        jsonList.append({"id": job.id, 
-                         "title": job.title, 
-                         "desc": job.description, 
+        jsonList.append({"id": job.id,
+                         "title": job.title,
+                         "description": job.description,
                          "experience_level": job.experience_level,
                          "owner_id": job.owner_id,
                          "budget": job.budget
                          })
     response = make_response(
-                jsonify(jsonList),
-                200
-            )
+        jsonify(jsonList),
+        200
+    )
     response.headers["Content-Type"] = "application/json"
     return response
 

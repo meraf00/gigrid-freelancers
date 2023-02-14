@@ -1,79 +1,85 @@
-{% extends 'base.html' %}
-
-{% block head %}
-<link rel="stylesheet" href="{{url_for('job_bp.static', filename='css/style.css')}}" />
-{% endblock %}
-
-{% block body %}
+{% extends 'base.html' %} {% block head %}
+<link
+  rel="stylesheet"
+  href="{{url_for('job_bp.static', filename='css/style.css')}}"
+/>
+{% endblock %} {% block body %}
 <section class="container">
-    <div class="call-to-action">
-        <button onclick="post()">Post Job</button>
-        <button onclick="showPosted()">See Posted Jobs</button>
-    </div>
-    <div class="posted-jobs">
-
-    </div>
-    <div class="post-form">
-        <form action="{{url_for('job_bp.post')}}" class="form" method="POST">
-            <div class="input">
-                <label for="title">Job Title</label>
-            <input type="text" name="title" id="title">
-            </div>
-            <div class="input">
-                <label for="description">Description</label>
-                <input type="text" name="description" id="description">
-            </div>
-            <div class="input">
-                <label for="experience-level">Experience Level</label>
-                <input type="text" name="experience-level" id="experience-level">                
-            </div>
-            <div class="input">
-                <label for="budget">Budget</label>
-                <input type="text" name="budget" id="budget">                
-            </div>
-            <button type="submit">Post Job</button>
-        </form>
-    </div>
+  <div class="call-to-action">
+    <button id="post-btn" class="tab" onclick="post()">Create new job</button>
+    <button id="view-btn" class="tab" onclick="showPosted()">
+      Active jobs
+    </button>
+  </div>
+  <div class="posted-jobs"></div>
+  <div class="post-form">
+    <form action="{{url_for('job_bp.post')}}" class="form" method="POST">
+      <div class="input">
+        <h3>Job Title</h3>
+        <input type="text" name="title" id="title" />
+      </div>
+      <div class="input">
+        <h3>Experience Level</h3>
+        <input type="text" name="experience-level" id="experience-level" />
+      </div>
+      <div class="input">
+        <h3>Budget</h3>
+        <input type="text" name="budget" id="budget" />
+      </div>
+      <div class="input">
+        <h3 for="description">Description</h3>
+        <textarea name="description" id="description"></textarea>
+      </div>
+      <div>
+        <button type="submit">Post Job</button>
+      </div>
+    </form>
+  </div>
 </section>
 
-
 <script>
-    const url = new URL(document.URL);
-    BASE_URL = `http://${url.hostname}:${url.port}`;
-    
-    function post() {
-        document.querySelector('.post-form').classList.toggle('show');
-        
+  const url = new URL(document.URL);
+  BASE_URL = `http://${url.hostname}:${url.port}`;
+
+  function post() {
+    document.getElementById("post-btn").classList.toggle("active", true);
+    document.getElementById("view-btn").classList.toggle("active", false);
+    document.querySelector(".post-form").classList.toggle("show", true);
+    document.querySelector(".posted-jobs").classList.toggle("show", false);
+  }
+
+  post();
+
+  async function showPosted() {
+    document.getElementById("post-btn").classList.toggle("active", false);
+    document.getElementById("view-btn").classList.toggle("active", true);
+    document.querySelector(".posted-jobs").classList.toggle("show", true);
+    document.querySelector(".post-form").classList.toggle("show", false);
+
+    let jobs = await fetch(`${BASE_URL}/job/myjobs`);
+
+    jobs = await jobs.json();
+
+    let contain = document.querySelector(".posted-jobs");
+    for (job of jobs) {
+      contain.innerHTML = `<div class="ccard">
+      <div class="ccard-left">
+          <i class="ccard-img fa-solid fa-briefcase fa-2x"></i>
+      </div>
+      <div class="ccard-right">
+          <div class="ccard-title">
+              <span>${job.title}</span>
+              <span class="ccard-xp">[${job.experience_level}]</span>
+          </div>
+          <div class="ccard-desc">
+              ${job.description}
+          </div>          
+          <p class="ccard-budget">
+             ${job.budget} ETB
+          </p>
+      </div>
+  </div>`;
     }
-    async function showPosted() {
-        document.querySelector('.posted').classList.toggle('show');
-        let jobs = await fetch(`${BASE_URL}/job/myjobs`)
-        jobs = await jobs.json()
-
-    
-        for(job of jobs){
-            let div = document.createElement('div')
-            div.className = 'job';
-            div.innerHTML = `<div class="ccard">
-        <div class="ccard-left">
-            <i class="ccard-img fa-solid fa-briefcase fa-3x"></i>
-        </div>
-        <div class="ccard-right">
-            <div class="ccard-title">
-                ${job.title}
-            </div>
-            <div class="ccard-desc">
-                ${job.description}
-            </div>
-        </div>
-    </div>`
-
-
-            let contain = document.querySelector('.container')
-            let before = document.querySelector('.call-to-action')
-            contain.insertBefore(div, before)
-        }
-    }
+  }
 </script>
-
 {% endblock %}
