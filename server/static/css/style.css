@@ -27,7 +27,7 @@ body {
   background-color: var(--primary-bg);
 }
 
-input {
+select, input {
   color: var(--primary-fg);
 }
 
@@ -61,6 +61,7 @@ input[type="submit"] {
   border: solid 1px var(--secondary-bg);
 }
 
+select:hover,
 button:hover,
 input[type="submit"]:hover {
   color: var(--primary-fg);
@@ -269,7 +270,7 @@ form.auth div {
   margin: 0.5rem auto;
 }
 
-textarea, input {
+textarea, input,select {
   display: block;
   padding: 0.7rem 1rem;
   outline: none;
@@ -277,6 +278,13 @@ textarea, input {
   border: 1px solid var(--secondary-bg);  
   font-size: 1rem;  
   width: 18rem;
+}
+
+select {
+  width: 20rem;
+}
+option {
+  padding: 1rem;
 }
 
 textarea {

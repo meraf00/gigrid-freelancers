@@ -19,9 +19,12 @@
 }
 
 .message {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 500;
-    color: #06b31a;
+    color: #06b31a;    
+    text-align: center;
+    padding-top: 1rem;
+    animation: fadeout 3s ease-in-out forwards;
 }
 
 .post-form {
@@ -40,3 +43,11 @@
     display: block
 }
 
+@keyframes fadeout {
+    0% {        
+        opacity: 1;
+    }
+    100% {        
+        opacity: 0;
+    }
+}
