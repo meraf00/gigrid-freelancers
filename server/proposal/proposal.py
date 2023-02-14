@@ -1,12 +1,9 @@
 import os
-import json
 from flask import Blueprint, render_template, request, jsonify, make_response, redirect, url_for, flash
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
 
 from utils import FileManager
-from uuid import uuid4
 from model import User, Job, UserType, Proposal, Attachment, File, db
 
 
@@ -133,3 +130,5 @@ def send_proposal():
         return "Not ok"
 
     return "Unauthorized"
+
+
