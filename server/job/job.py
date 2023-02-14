@@ -20,7 +20,7 @@ file_mgr = FileManager(os.getenv('UPLOAD_FOLDER'))
 def job():
     message = request.args.get("message")
     if current_user.user_type == UserType.EMPLOYER:
-        return render_template('post_job.html', message=message)
+        return render_template('employer_job.html', message=message)
     else:
         return render_template('filter_job.html', message=message)
 
@@ -66,6 +66,30 @@ def see_posted_jobs():
     )
     response.headers["Content-Type"] = "application/json"
     return response
+
+@job_bp.route('/filterJob', methods=['POST'])
+def filter():
+    key = request.json.get("key")
+    jobs = Job.filter_job(key)
+    jsonList = []
+
+    for job in jobs:
+        jsonList.append({"id": job.id,
+                         "title": job.title,
+                         "description": job.description,
+                         "experience_level": job.experience_level,
+                         "owner_id": job.owner_id,
+                         "budget": job.budget
+                         })
+    response = make_response(
+        jsonify(jsonList),
+        200
+    )
+    response.headers["Content-Type"] = "application/json"
+    return response
+
+
+
 
 
 @job_bp.route('/uploadfile', methods=['POST'])
