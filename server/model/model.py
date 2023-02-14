@@ -324,12 +324,7 @@ class Job(db.Model):
         """
 
         job = Job.query.filter(
-            # db.or_(
-                # Job.title == "%{}%".format(key),
                 Job.title == key
-                # Job.description == "%{}%".format(key),
-                # Job.experience_level == key.upper()
-            # )
         )
         print(job)
         return job

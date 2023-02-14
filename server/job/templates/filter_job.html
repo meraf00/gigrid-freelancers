@@ -123,12 +123,10 @@
     BASE_URL = `http://${url.hostname}:${url.port}`;
     async function filter(){
         const keyword = document.getElementById('search-bar').value.toLowerCase()
-        // console.log(keyword)
 
         let jobs = await fetch(`${BASE_URL}/job/filterJob`, {
                                 method: "post",
                                 headers: {
-                                // 'Accept': 'application/json',
                                 'Content-Type': 'application/json'
                                 },
                                 body: JSON.stringify({
