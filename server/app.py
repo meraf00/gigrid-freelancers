@@ -11,6 +11,7 @@ from chat import chat_bp, socketio
 from docs.doc import doc_bp
 from job import job_bp
 from proposal import proposal_bp
+from payment import payment_bp
 from auth import AuthenticationManager
 
 load_dotenv()
@@ -30,6 +31,7 @@ app.register_blueprint(chat_bp, url_prefix='/messages')
 app.register_blueprint(doc_bp, url_prefix='/docs')
 app.register_blueprint(job_bp, url_prefix='/job')
 app.register_blueprint(proposal_bp, url_prefix='/proposal')
+app.register_blueprint(payment_bp, url_prefix='/payment')
 
 auth_manager = AuthenticationManager(os.getenv('FLASK_SECRET_KEY'))
 
@@ -49,9 +51,9 @@ def home():
     return render_template("home.html")
 
 
-@app.route("/earnings")
-def earnings():
-    return render_template('earning.html')
+@app.route("/finance")
+def finance():
+    return render_template('finance.html')
 
 
 @app.route("/login", methods=["GET", "POST"])

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import requests
-from exceptions import *
+from .exceptions import *
 
 
 class PaymentHandler(ABC):
@@ -105,6 +105,15 @@ class ChapaPaymentHandler(PaymentHandler):
 
         try:
             return response.json()["status"] == "success"
+        except:
+            return False
+
+    def get_transaction_data(self, transaction_reference: str) -> bool:
+        response = requests.get(
+            f"{self.VERIFICATION_URL}/{transaction_reference}", headers=self.headers)
+
+        try:
+            return response.json()['data']
         except:
             return False
 

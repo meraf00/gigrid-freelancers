@@ -59,7 +59,7 @@ class User(db.Model, UserMixin):
     date_of_birth = db.Column(db.DateTime)
     user_type = db.Column(db.Enum(UserType.FREELANCER, UserType.EMPLOYER))
     token = db.Column(db.String(200))
-    balance = db.Column(db.Float)
+    balance = db.Column(db.Float, default=0)
 
     @property
     def chats(self):
