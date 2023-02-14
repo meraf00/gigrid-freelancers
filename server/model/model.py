@@ -394,6 +394,30 @@ class Escrow(db.Model):
         return f"Escrow(id={self.id}, job={self.job_id}, to={self.worker_id}, amount={self.amount})"
 
 
+class Proposal(db.Model):
+    """Proposal is created when worker applies for a job
+
+    Parameters:
+        job_id (str): unique job id
+        worker_id (str): the freelancer id
+        content (str): cover letter highlighting freelancers skills
+        attachment_id (str): attached files
+        sent_time (datetime): date of application
+    """
+
+    worker_id = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
+    job_id = db.Column(db.String, db.ForeignKey(Job.id), primary_key=True)
+    attachment_id = db.Column(
+        db.String, db.ForeignKey(Job.id), primary_key=True)
+    content = db.Column(db.String(500))
+    sent_time = db.Column(db.DateTime, default=datetime.now)
+
+    job = db.relationship(Job, backref='proposals',
+                          foreign_keys=[job_id])
+    sender = db.relationship(User, backref='proposals',
+                             foreign_keys=[worker_id])
+
+
 # class UserBalance(db.Model):
 #     """Represents user balance in the system
 

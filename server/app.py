@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 from dotenv import load_dotenv
 
 from werkzeug.security import generate_password_hash
@@ -11,6 +10,7 @@ from model import User, UserType, db, File, Message, ContentType
 from chat import chat_bp, socketio
 from docs.doc import doc_bp
 from job import job_bp
+from proposal import proposal_bp
 from auth import AuthenticationManager
 
 load_dotenv()
@@ -29,6 +29,7 @@ socketio.init_app(app)
 app.register_blueprint(chat_bp, url_prefix='/messages')
 app.register_blueprint(doc_bp, url_prefix='/docs')
 app.register_blueprint(job_bp, url_prefix='/job')
+app.register_blueprint(proposal_bp, url_prefix='/proposal')
 
 auth_manager = AuthenticationManager(os.getenv('FLASK_SECRET_KEY'))
 

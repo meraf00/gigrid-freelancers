@@ -91,13 +91,15 @@ CREATE TABLE User_balance (
     amount FLOAT NOT NULL DEFAULT 0
 );
 
-create table if not exists Proposal(
+CREATE TABLE Proposal(
     worker_id INT not null,
-    content varchar(500),
-    attachment CHAR(36),
     job_id CHAR(36) not null,
+    attachment_id CHAR(36),
+    content varchar(500),
     sent_time datetime not null,
     
     foreign key (worker_id) references User(id),
-    foreign key (job_id) references Job(id)
+    foreign key (job_id) references Job(id),
+    foreign key (attachment_id) references Attachment(id),
+    PRIMARY Key (worker_id, job_id)
 );
