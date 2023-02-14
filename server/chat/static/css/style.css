@@ -145,6 +145,15 @@ header {
   border-top: 1px solid gray;
 }
 
+.contract-form {
+  padding: .5rem;
+}
+
+.contract-form input {
+  padding: .3rem;
+  margin-bottom: .7rem;
+}
+
 .underline {
   text-decoration: underline;
 }

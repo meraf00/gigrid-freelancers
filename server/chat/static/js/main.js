@@ -73,9 +73,12 @@ const openChat = (target) => {
 
   target.classList.toggle("active", true);
 
-  const username = target.querySelector(".username")?.innerHTML;
-  const user_type = target.querySelector(".username")?.dataset.user_type;
-  chat_detail.innerHTML = user_detail(username, user_type);
+  const userdata = target.querySelector("#userdata").dataset;
+  const user_id = userdata.user_id;
+  const user_type = userdata.user_type;
+  const user_name = userdata.user_name;
+  chat_detail.innerHTML = user_detail(user_name, user_type);
+  chat_detail.innerHTML += create_contract(user_id);
 };
 
 // Socket Event Handling
