@@ -32,8 +32,8 @@ def deposite():
         'first_name': current_user.firstname,
         'last_name': current_user.lastname,
         'tx_ref': ref,
-        'callback_url': 'http://localhost:5000/payment/verify',
-        'return_url': 'http://localhost:5000/',
+        'callback_url': url_for('payment_bp.verify_transaction'),
+        'return_url': url_for('home'),
         'customization[title]': 'Freelancers',
         'customization[description]': 'Send payment'
     })
