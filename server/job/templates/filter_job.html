@@ -10,12 +10,13 @@
     <section>
         <div class="search">
             <h1>Recently added jobs</h1>
-            <input class="search-bar" type="text" placeholder="search jobs...">
+            <input id="search-bar" type="text" placeholder="search jobs...">
+            <button type="submit" onclick="filter()">Search</button>
         </div>
         
 
         
-        <div class="ccards">
+        <div class="ccards posted-jobs">
             <div class="ccard">
                 <div class="ccard-left">
                     <i class="ccard-img fa-solid fa-briefcase fa-3x"></i>
@@ -117,6 +118,47 @@
             </div>
         </div>
     </section>
+<script>
+    const url = new URL(document.URL);
+    BASE_URL = `http://${url.hostname}:${url.port}`;
+    async function filter(){
+        const keyword = document.getElementById('search-bar').value.toLowerCase()
+        // console.log(keyword)
 
+        let jobs = await fetch(`${BASE_URL}/job/filterJob`, {
+                                method: "post",
+                                headers: {
+                                // 'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    key: keyword
+                                })
+                });
+        jobs = await jobs.json()
+
+        let contain = document.querySelector(".posted-jobs");
+        contain.innerHTML = "";
+        for (job of jobs) {
+            contain.innerHTML += `<div class="ccard">
+            <div class="ccard-left">
+                <i class="ccard-img fa-solid fa-briefcase fa-2x"></i>
+            </div>
+            <div class="ccard-right">
+                <div class="ccard-title">
+                    <span>${job.title}</span>
+                    <span class="ccard-xp">[${job.experience_level}]</span>
+                </div>
+                <div class="ccard-desc">
+                    ${job.description}
+                </div>          
+                <p class="ccard-budget">
+                    ${job.budget} ETB
+                </p>
+            </div>
+        </div>`;
+    }
+    }
+</script>
     
 {% endblock %}

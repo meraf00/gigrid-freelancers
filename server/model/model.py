@@ -324,12 +324,14 @@ class Job(db.Model):
         """
 
         job = Job.query.filter(
-            db.or_(
-                Job.title == "%{}%".format(key),
-                Job.description == "%{}%".format(key),
-                Job.experience_level == key.upper()
-            )
+            # db.or_(
+                # Job.title == "%{}%".format(key),
+                Job.title == key
+                # Job.description == "%{}%".format(key),
+                # Job.experience_level == key.upper()
+            # )
         )
+        print(job)
         return job
 
     @staticmethod
@@ -347,6 +349,16 @@ class Job(db.Model):
             Job.owner_id == owner_id
         )
         return jobs
+    
+    def get_all_jobs():
+        """Gets all posted Jobs
+        Args:
+            None
+        Returns:
+            list: list of jobs
+        """
+        job = Job.query.all()
+        return job
 
     def __repr__(self):
         return f"Job(id={self.id}, job_title={self.title}, experience_level={self.experience_level}, job_owner={self.owner_id}, post_time={self.post_time}, job_description={self.description})"
