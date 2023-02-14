@@ -210,6 +210,11 @@ form > label[for="file"] {
   left: 10px;
 }
 
+.small {
+  font-size: small;
+  
+}
+
 @media (max-width: 700px) {
   .chat-detail {
     display: none;

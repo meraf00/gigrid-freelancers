@@ -21,7 +21,7 @@
       </div>
 
       <div class="group">
-        <h1 class="username">
+        <h1 class="username" data-user_type="{{current_user.user_type}}">
           {% if chat.u1.id==current_user.id %} {{"%s %s" % (chat.u2.firstname,
           chat.u2.lastname)}} {% else %} {{"%s %s" % (chat.u1.firstname,
           chat.u1.lastname)}} {% endif %}
@@ -94,18 +94,7 @@
   </section>
 
   <!-- Detail panel -->
-  <section class="chat-detail" id="chat-detail">
-    <div class="chat-item">
-      <div class="avater">
-        <img src="/ui-mockups/sitemap/FSE-project-sitemap.png" alt="" />
-      </div>
-
-      <div class="group">
-        <h1 class="username">Alli Rake</h1>
-        <p class="text">Online</p>
-      </div>
-    </div>
-  </section>
+  <section class="chat-detail" id="chat-detail"></section>
 </header>
 
 <input type="hidden" id="user_token" value="{{current_user.token}}" />

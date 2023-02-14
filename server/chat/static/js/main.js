@@ -12,7 +12,7 @@ ONLINE_ANN = "online_announcement";
 const chat_history = document.getElementById("chat-history");
 const text_field = document.getElementById("text-input");
 const send_btn = document.getElementById("send-message-btn");
-
+const chat_detail = document.getElementById("chat-detail");
 const user_token = document.getElementById("user_token").value;
 let current_chat = null;
 
@@ -72,6 +72,10 @@ const openChat = (target) => {
     .forEach((chatItem) => chatItem.classList.toggle("active", false));
 
   target.classList.toggle("active", true);
+
+  const username = target.querySelector(".username")?.innerHTML;
+  const user_type = target.querySelector(".username")?.dataset.user_type;
+  chat_detail.innerHTML = user_detail(username, user_type);
 };
 
 // Socket Event Handling
