@@ -4,6 +4,7 @@ from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+from sqlalchemy.orm.exc import NoResultFound
 
 from typing import Optional
 
@@ -23,6 +24,13 @@ class ExperienceLevel:
     ENTRY = 'ENTRY'
     INTERMEDIATE = 'INTERMEDIATE'
     EXPERT = "EXPERT"
+
+
+class ContractStatus:
+    """Data class to represent whether contract is accepted or rejected"""
+
+    ACCEPTED = 'A'
+    REJECTED = 'R'    
 
 
 class ContentType:
@@ -372,6 +380,7 @@ class Contract(db.Model):
         job_id (str): the job id
         worker_id (str): the freelancer id
         deadline (datetime): last date for work submission
+        status (string): accepted or rejected by the worker
 
     `If the contract is not fullfilled before deadline, fund in escrow will 
     be refunded to job owner`
@@ -381,10 +390,18 @@ class Contract(db.Model):
     job_id = db.Column(db.String(36), db.ForeignKey(Job.id))
     worker_id = db.Column(db.String(36), db.ForeignKey(User.id))
     deadline = db.Column(db.DateTime)
+    status = db.Column(db.String(1))
 
     job = db.relationship(Job, backref='contract', foreign_keys=[job_id])
     worker = db.relationship(User, backref='contract',
                              foreign_keys=[worker_id])
+
+    def already_exists(job_id, worker_id):
+        try:
+            if Contract.query.filter_by(job_id=job_id, worker_id=worker_id).one():
+                return True
+        except NoResultFound:
+            return False
 
 
 class Escrow(db.Model):
