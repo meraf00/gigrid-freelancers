@@ -53,3 +53,9 @@ def verify_transaction():
 
         return jsonify(True)
     return jsonify(False)
+
+
+# @payment_bp.route("/escrow", method=["POST"])
+# def create_escrow():
+#     request.json.get("job_id")
+

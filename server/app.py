@@ -12,6 +12,7 @@ from docs.doc import doc_bp
 from job import job_bp
 from proposal import proposal_bp
 from payment import payment_bp
+from contract import contract_bp
 from auth import AuthenticationManager
 
 load_dotenv()
@@ -32,6 +33,7 @@ app.register_blueprint(doc_bp, url_prefix='/docs')
 app.register_blueprint(job_bp, url_prefix='/job')
 app.register_blueprint(proposal_bp, url_prefix='/proposal')
 app.register_blueprint(payment_bp, url_prefix='/payment')
+app.register_blueprint(contract_bp, url_prefix='/contract')
 
 auth_manager = AuthenticationManager(os.getenv('FLASK_SECRET_KEY'))
 

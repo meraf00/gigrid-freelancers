@@ -59,14 +59,15 @@ CREATE TABLE Job (
     post_time DATETIME not null DEFAULT NOW()
 );
 
-CREATE TABLE Contract (
+CREATE TABLE Contract (    
     id CHAR(36) PRIMARY KEY,
     job_id CHAR(36) NOT NULL,
     worker_id INT NOT NULL,
-    deadline DATETIME NOT NULL,    
+    deadline DATETIME NOT NULL,   
+    `status` CHAR(1),
 
     FOREIGN KEY (worker_id) REFERENCES User(id),
-    FOREIGN KEY (job_id) REFERENCES Job(id)
+    FOREIGN KEY (job_id) REFERENCES Job(id)    
 );
 
 CREATE TABLE Escrow (
