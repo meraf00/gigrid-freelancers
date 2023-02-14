@@ -1,7 +1,7 @@
 const user = (avater, username, text) => `
 <div class="chat-item" onclick="openChat(this)">
     <div class="avater">
-        <img src="${avater}" alt="" />
+        <img src="${BASE_URL}/messages/static/icons/avatar.png" alt="" />
     </div>
 
     <div class="group">

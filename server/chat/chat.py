@@ -13,6 +13,7 @@ from model import User, Chat, Message, File, ContentType
 from utils import FileManager
 from auth import AuthenticationManager, load_user
 from .ChatManager import ChatManager
+import re
 
 sys.path.append('..')
 
@@ -22,11 +23,18 @@ chat_bp = Blueprint('chat_bp', __name__,
 socketio = SocketIO(cors_allowed_origins="*")
 file_mgr = FileManager(os.getenv('UPLOAD_FOLDER'))
 
+CLEANR = re.compile('<.*?>')
+
+
+def text_only(raw_html):
+    clean_text = re.sub(CLEANR, '', raw_html)
+    return clean_text
+
 
 @chat_bp.route('/')
 @login_required
 def message():
-    return render_template('messages.html')
+    return render_template('messages.html', text_only=text_only)
 
 
 @chat_bp.route('/', methods=['POST'])
