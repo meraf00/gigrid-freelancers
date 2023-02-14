@@ -94,10 +94,24 @@ header {
 .file-message {
   padding: 0.2rem 0.5rem;
   margin-bottom: 0.75rem;
-  border: 1px solid blueviolet;
-  background-color: powderblue;
+  /* border: 1px solid blueviolet; */
+  /* background-color: powderblue; */
   border-radius: var(--radius);
   max-width: 40%;
+  /* font-size: 12px; */
+  background: #e8e8e8;
+  padding: 5px 10px;
+  border-radius: 5px 5px 5px 0px;
+  position: relative;
+}
+.text-message::before,
+.file-message::before { 
+  position: absolute;
+  content: "";
+  border: 10px solid transparent;
+  border-bottom-color: #e8e8e8;
+  bottom: 0px;
+  left: -10px;
 }
 
 .text-message {
@@ -173,6 +187,27 @@ form > label[for="file"] {
 
 #clear-file {
   cursor: pointer;
+}
+
+.avatar {
+  width: 60px;
+  float: left;
+  text-align: center;
+  position: relative;
+}
+
+.avatar img {
+  width: 50px;
+  border-radius: 50%;
+}
+
+.avatar i {
+  position: absolute;
+  font-size: 10px;
+  color: #52e2a7;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  left: 10px;
 }
 
 @media (max-width: 700px) {

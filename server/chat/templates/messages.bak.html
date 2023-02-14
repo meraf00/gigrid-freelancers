@@ -6,18 +6,13 @@
 <script src="{{url_for('chat_bp.static', filename='js/socket.io.js')}}"></script>
 {% endblock %} {% block body %}
 
-<body></body>
 <header class="main">
   <!-- Chat list -->
   <section class="chat-list">
     {% for chat in current_user.chats %}
     <div class="chat-item" onclick="openChat(this)" data-chat_id="{{chat.id}}">
-      <div class="avatar">
-        <i class="fa fa-circle"></i>
-        <img
-          src="{{url_for('chat_bp.static', filename='icons/avatar.png')}}"
-          alt=""
-        />
+      <div class="avater">
+        <img src="{{current_user.id}}" alt="" />
       </div>
 
       <div class="group">
@@ -28,7 +23,7 @@
         </h1>
 
         {% if chat.messages %}
-        <p class="text">{{text_only(chat.messages[-1].content)}}</p>
+        <p class="text">{{chat.messages[-1].content}}</p>
         {% endif %}
       </div>
     </div>
