@@ -331,9 +331,7 @@ class Job(db.Model):
                 Job: job object if job associated with they key is found, None otherwise
         """
 
-        job = Job.query.filter(
-                Job.title == key
-        )
+        job = Job.query.filter_by(title = key).all()
         return job
 
     @staticmethod
