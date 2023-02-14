@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, jsonify, make_response, r
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
-from model import Job, ContractStatus, Contract, db
+from model import User, Job, ContractStatus, Contract, db
 
 
 contract_bp = Blueprint('contract_bp', __name__,
