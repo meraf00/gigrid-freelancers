@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from utils import FileManager
 from uuid import uuid4
 
-from model import User, UserType, Job, Attachement, File, db
+from model import User, UserType, Job, Attachment, File, db
 
 
 job_bp = Blueprint('job_bp', __name__,

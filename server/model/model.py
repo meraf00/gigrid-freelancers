@@ -257,7 +257,7 @@ class File(db.Model):
         return f"File(id={self.id}, file_name={self.file_name}, mime_type={self.mime_type})"
 
 
-class Attachement(db.Model):
+class Attachment(db.Model):
     id = db.Column(db.String(36), primary_key=True)
     file_id = db.Column(db.String(36), db.ForeignKey(
         File.id), primary_key=True)
@@ -287,13 +287,29 @@ class Job(db.Model):
             ExperienceLevel.ENTRY,
             ExperienceLevel.INTERMEDIATE,
             ExperienceLevel.EXPERT))
-    attachement_id = db.Column(db.String(50), db.ForeignKey(Attachement.id))
+    attachment_id = db.Column(db.String(50), db.ForeignKey(Attachment.id))
     budget = db.Column(db.Float)
     owner_id = db.Column(db.Integer, db.ForeignKey(User.id))
     post_time = db.Column(db.DateTime, default=datetime.now)
 
-    attachement = db.relationship(Attachement, foreign_keys=[attachement_id])
+    attachment = db.relationship(Attachment, foreign_keys=[attachment_id])
     owner = db.relationship(User, foreign_keys=[owner_id])
+
+    @staticmethod
+    def get(job_id: str) -> Optional[Job]:
+        """Queries job from data base
+
+        Args:
+            job_id (str): job id
+
+        Returns:
+            Job: Job object if job is found or None
+        """
+        try:
+            job = Job.query.filter_by(id=job_id).first()
+            return job
+        except:
+            return None
 
     @staticmethod
     def filter_job(key: str) -> Optional[Job]:
@@ -317,7 +333,7 @@ class Job(db.Model):
         return job
 
     @staticmethod
-    def get_job(owner_id: int) -> Optional[Job]:
+    def get_jobs(owner_id: int) -> Optional[Job]:
         """Gets jobs owned by user
 
         Args:
@@ -327,10 +343,10 @@ class Job(db.Model):
                 Job: job object if job owned by user is found, None otherwise
         """
 
-        job = Job.query.filter(
+        jobs = Job.query.filter(
             Job.owner_id == owner_id
         )
-        return job
+        return jobs
 
     def __repr__(self):
         return f"Job(id={self.id}, job_title={self.title}, experience_level={self.experience_level}, job_owner={self.owner_id}, post_time={self.post_time}, job_description={self.description})"
@@ -406,9 +422,9 @@ class Proposal(db.Model):
     """
 
     worker_id = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
-    job_id = db.Column(db.String, db.ForeignKey(Job.id), primary_key=True)
+    job_id = db.Column(db.String(36), db.ForeignKey(Job.id), primary_key=True)
     attachment_id = db.Column(
-        db.String, db.ForeignKey(Job.id), primary_key=True)
+        db.String(36), db.ForeignKey(Attachment.id))
     content = db.Column(db.String(500))
     sent_time = db.Column(db.DateTime, default=datetime.now)
 
@@ -416,6 +432,7 @@ class Proposal(db.Model):
                           foreign_keys=[job_id])
     sender = db.relationship(User, backref='proposals',
                              foreign_keys=[worker_id])
+    attachments = db.relationship(Attachment, foreign_keys=[attachment_id])
 
 
 # class UserBalance(db.Model):

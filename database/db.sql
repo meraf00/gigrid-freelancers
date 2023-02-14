@@ -53,7 +53,7 @@ CREATE TABLE Job (
     title VARCHAR(50) NOT NULL,
     `description` VARCHAR(500) NOT NULL,
     experience_level ENUM('ENTRY', 'INTERMEDIATE', 'EXPERT') NOT NULL,
-    attachement_id CHAR(36),
+    attachment_id CHAR(36),
     budget float,
     owner_id int not null,
     post_time DATETIME not null DEFAULT NOW()
