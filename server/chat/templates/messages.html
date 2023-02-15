@@ -23,8 +23,23 @@
       <div class="group">
         <h1 class="username">
           {% if chat.u1.id==current_user.id %} {{"%s %s" % (chat.u2.firstname,
-          chat.u2.lastname)}} {% else %} {{"%s %s" % (chat.u1.firstname,
-          chat.u1.lastname)}} {% endif %}
+          chat.u2.lastname)}}
+          <input
+            type="hidden"
+            id="userdata"
+            data-user_id="{{chat.u2.id}}"
+            data-user_type="{{chat.u2.user_type}}"
+            data-user_name="{{'%s %s' % (chat.u2.firstname, chat.u2.lastname)}}"
+          />
+          {% else %} {{"%s %s" % (chat.u1.firstname, chat.u1.lastname)}}
+          <input
+            type="hidden"
+            id="userdata"
+            data-user_id="{{chat.u1.id}}"
+            data-user_type="{{chat.u1.user_type}}"
+            data-user_name="{{'%s %s' % (chat.u1.firstname, chat.u1.lastname)}}"
+          />
+          {% endif %}
         </h1>
 
         {% if chat.messages %}
@@ -95,20 +110,12 @@
 
   <!-- Detail panel -->
   <section class="chat-detail" id="chat-detail">
-    <div class="chat-item">
-      <div class="avater">
-        <img src="/ui-mockups/sitemap/FSE-project-sitemap.png" alt="" />
-      </div>
-
-      <div class="group">
-        <h1 class="username">Alli Rake</h1>
-        <p class="text">Online</p>
-      </div>
-    </div>
+    
   </section>
 </header>
 
 <input type="hidden" id="user_token" value="{{current_user.token}}" />
+<input type="hidden" id="current_user_id" value="{{current_user.id}}" />
 <script src="{{url_for('chat_bp.static', filename='js/reusable-ui-components.js')}}"></script>
 <script src="{{url_for('chat_bp.static', filename='js/file-upload.js')}}"></script>
 <script src="{{url_for('chat_bp.static', filename='js/text-formater.js')}}"></script>

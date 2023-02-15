@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, jsonify, make_response, r
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
-from model import User, Job, ContractStatus, Contract, db
+from model import User, Job, ContractStatus, Contract, Escrow, UserType, db
 
 
 contract_bp = Blueprint('contract_bp', __name__,
@@ -15,27 +15,42 @@ contract_bp = Blueprint('contract_bp', __name__,
 def create_contract():
     job_id = request.form.get("job_id")
     worker_id = request.form.get("worker_id")
+    budget = request.form.get("budget")
     deadline = datetime.strptime(request.form.get("deadline"), "%Y-%m-%d")
+
+    try:
+        if current_user.balance < float(budget):
+            return render_template("contract.html", message="Insufficient balance to set up escrow.", status=400)
+    except:
+        return render_template("contract.html", message="Insufficient balance to set up escrow.", status=400)
 
     job = Job.get(job_id)
     worker = User.get(worker_id)
 
     if job.owner.id != current_user.id:
-        return "Unauthorized"
+        return redirect(url_for('login'))
 
     if job and worker and not Contract.already_exists(job_id, worker_id):
-        new_contract = Contract(id=uuid4(),
+        contract_id = uuid4()
+
+        new_contract = Contract(id=contract_id,
                                 job_id=job_id, worker_id=worker_id, deadline=deadline)
+
+        new_escrow = Escrow(id=uuid4(),
+                            contract_id=contract_id, amount=float(budget))
 
         try:
             db.session.add(new_contract)
+            db.session.add(new_escrow)
+            current_user.balance -= float(budget)
             db.session.commit()
+
         except IntegrityError:
-            return "Contract exists"
+            return render_template("contract.html", message="Contract already exists.", status=400)
 
-        return "OK"
+        return render_template("contract.html", status=200, worker=worker)
 
-    return "Error"
+    return render_template("contract.html", message="Contract already exists.", status=400)
 
 
 @contract_bp.route("/<contract_id>/<response>")
@@ -49,6 +64,7 @@ def accept_or_reject_contract(contract_id, response):
     if contract.worker_id == current_user.worker_id:
         if response == "accept":
             contract.status = ContractStatus.ACCEPTED
+            contract.escrow.date_of_initiation = datetime.now()
         elif response == "reject":
             contract.status = ContractStatus.REJECTED
         db.session.commit()
@@ -56,3 +72,12 @@ def accept_or_reject_contract(contract_id, response):
         return redirect(url_for("contract_bp.contracts"))
 
     return "Unauthorized"
+
+
+@contract_bp.route("/")
+@login_required
+def contracts():
+    if current_user.user_type == UserType.EMPLOYER:
+        return render_template("")
+
+    return render_template("")

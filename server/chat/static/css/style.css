@@ -145,6 +145,17 @@ header {
   border-top: 1px solid gray;
 }
 
+.contract-form {
+  padding: .5rem;
+}
+
+.contract-form input,
+.contract-form input[type='submit'],
+.contract-form select {  
+  padding: .3rem;
+  margin-bottom: .7rem;
+}
+
 .underline {
   text-decoration: underline;
 }
@@ -208,6 +219,11 @@ form > label[for="file"] {
   border: 1px solid #fff;
   border-radius: 50%;
   left: 10px;
+}
+
+.small {
+  font-size: small;
+  
 }
 
 @media (max-width: 700px) {

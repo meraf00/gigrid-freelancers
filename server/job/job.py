@@ -46,10 +46,9 @@ def post():
     return redirect(url_for('job_bp.job', message="Job posted successfully."))
 
 
-@job_bp.route('/myjobs', methods=['GET'])
-@login_required
-def see_posted_jobs():
-    jobs = current_user.get_posted_jobs()
+@job_bp.route('/user/<user_id>', methods=['GET'])
+def see_posted_jobs(user_id):
+    jobs = User.get(user_id).get_posted_jobs()
     jsonList = []
 
     for job in jobs:
