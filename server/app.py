@@ -14,12 +14,15 @@ from proposal import proposal_bp
 from payment import payment_bp
 from contract import contract_bp
 from auth import AuthenticationManager
+from utils import FileManager
 
 load_dotenv()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
+
+file_mgr = FileManager(os.getenv('UPLOAD_FOLDER'))
 
 db.init_app(app)
 
@@ -101,10 +104,15 @@ def register_freelancer():
         date = request.form.get("date")
         email = request.form.get("email")
         password = request.form.get("password")
+        resume = request.files["file"]
+
+        file_id = file_mgr.save(resume)
+        
+
 
         new_user = User(firstname=fname, lastname=lname,
                         email=email, password=generate_password_hash(password),
-                        date_of_birth=date, user_type=UserType.FREELANCER)
+                        date_of_birth=date, resume_id=file_id, user_type=UserType.FREELANCER)
 
         try:
             db.session.add(new_user)

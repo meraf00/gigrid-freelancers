@@ -68,6 +68,7 @@ class User(db.Model, UserMixin):
     user_type = db.Column(db.Enum(UserType.FREELANCER, UserType.EMPLOYER))
     token = db.Column(db.String(200))
     balance = db.Column(db.Float, default=0)
+    resume_id = db.Column(db.String(100))
 
     @property
     def chats(self):
