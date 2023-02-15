@@ -350,6 +350,7 @@ class Job(db.Model):
         )
         return jobs
     
+    @staticmethod
     def get_all_jobs():
         """Gets all posted Jobs
         Args:
@@ -360,6 +361,16 @@ class Job(db.Model):
         job = Job.query.all()
         return job
 
+    @staticmethod
+    def deleteJob():
+        """Deletes a job post of an employer
+        Args: 
+            None
+        Returns:
+            None
+        """
+
+        
     def __repr__(self):
         return f"Job(id={self.id}, job_title={self.title}, experience_level={self.experience_level}, job_owner={self.owner_id}, post_time={self.post_time}, job_description={self.description})"
 

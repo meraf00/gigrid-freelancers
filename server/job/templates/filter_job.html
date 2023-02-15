@@ -82,10 +82,12 @@
                     })
                 });
         jobs = await jobs.json()
-
+        
+        let noJobs = true;
         let contain = document.querySelector(".posted-jobs");
         contain.innerHTML = "";
         for (job of jobs) {
+            noJobs = false;
             contain.innerHTML += `<div class="ccard">
             <div class="ccard-left">
                 <i class="ccard-img fa-solid fa-briefcase fa-2x"></i>
@@ -103,6 +105,9 @@
                 </p>
             </div>
         </div>`;
+        }
+        if (noJobs){
+            contain.innerHTML += `<div>No Matching Jobs</div>`
         }
     }
 </script>

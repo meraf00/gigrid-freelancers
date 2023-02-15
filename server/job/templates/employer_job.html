@@ -73,20 +73,28 @@
       <div class="ccard-left">
           <i class="ccard-img fa-solid fa-briefcase fa-2x"></i>
       </div>
-      <div class="ccard-right">
-          <div class="ccard-title">
-              <span>${job.title}</span>
-              <span class="ccard-xp">[${job.experience_level}]</span>
-          </div>
-          <div class="ccard-desc">
-              ${job.description}
-          </div>          
-          <p class="ccard-budget">
-             ${job.budget} ETB
-          </p>
+      <div class="ccard-rightmost">
+        <div class="ccard-right">
+            <div class="ccard-title">
+                <span>${job.title}</span>
+                <span class="ccard-xp">[${job.experience_level}]</span>
+            </div>
+            <div class="ccard-desc">
+                ${job.description}
+            </div>          
+            <p class="ccard-budget">
+              ${job.budget} ETB
+            </p>
+        </div>
+        <button class="delete" onclick="delete()" >Delete Post</button>
       </div>
   </div>`;
     }
   }
+
+  function deletePost() {
+    
+  }
+
 </script>
 {% endblock %}

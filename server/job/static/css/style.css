@@ -43,6 +43,12 @@
     display: block
 }
 
+.ccard-rightmost {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
 @keyframes fadeout {
     0% {        
         opacity: 1;
