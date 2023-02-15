@@ -62,7 +62,7 @@
     document.querySelector(".posted-jobs").classList.toggle("show", true);
     document.querySelector(".post-form").classList.toggle("show", false);
 
-    let jobs = await fetch(`${BASE_URL}/job/myjobs`);
+    let jobs = await fetch(`${BASE_URL}/job/user/{{current_user.id}}`);
 
     jobs = await jobs.json();
 

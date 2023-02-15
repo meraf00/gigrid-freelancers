@@ -23,7 +23,7 @@ const fileMessageComponent = (fileName, fileLink, time, sent = "") => `
 </div>`;
 
 const user_detail = (username, user_type) => `
-<div class="chat-item">
+<div class="chat-item active">
     <div class="avatar">
         <img src="${BASE_URL}/messages/static/icons/avatar.png" alt="" />
     </div>
@@ -35,23 +35,31 @@ const user_detail = (username, user_type) => `
 </div>
 `;
 
+const create_options = (jobs) => {
+  let names = "";
+  for (job of jobs) {
+    names += `<option value=${job.id}>${job.title}</option>`;
+  }
+  return names;
+};
+
 const create_contract = (user_id, jobs) => `
-<form class="contract-form">
-    <div><strong>Create contract</strong></div>
-    
+<form class="contract-form" method="post" action="${BASE_URL}/contract/">
     <div class="contract-form">
+        <input type="hidden" name="worker_id" value="${user_id}">
+
         <label for="jobs">Job</label>
-        <select id="jobs">
-            ${
-                `<option>`
-            }            
+        <select name="job_id" id="jobs" required>
+            ${create_options(jobs)}            
         </select>
 
         <label for="budget">Budget</label>
-        <input type="number" step="0.01" id="budget"/>
+        <input type="number" step="0.01" id="budget" name="budget" required/>
 
         <label for="deadline">Deadline</label>
-        <input type="date" id="deadline"/>
+        <input type="date" name="deadline" id="deadline" required/>
+
+        <input type="submit" value="Create contract">
     </div>
 </form>
 `;

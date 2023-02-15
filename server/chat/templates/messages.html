@@ -109,10 +109,13 @@
   </section>
 
   <!-- Detail panel -->
-  <section class="chat-detail" id="chat-detail"></section>
+  <section class="chat-detail" id="chat-detail">
+    
+  </section>
 </header>
 
 <input type="hidden" id="user_token" value="{{current_user.token}}" />
+<input type="hidden" id="current_user_id" value="{{current_user.id}}" />
 <script src="{{url_for('chat_bp.static', filename='js/reusable-ui-components.js')}}"></script>
 <script src="{{url_for('chat_bp.static', filename='js/file-upload.js')}}"></script>
 <script src="{{url_for('chat_bp.static', filename='js/text-formater.js')}}"></script>

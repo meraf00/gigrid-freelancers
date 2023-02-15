@@ -1,10 +1,10 @@
 :root {
   --primary-fg: #000004;
-  --primary-bg: #fbfef9;
-  --secondary-fg: #efe9f4;
-  --secondary-bg: #5863f8;
-  --link: #133c55;
-  --link-hover: #386fa4;
+  --primary-bg: #fff;
+  --secondary-fg: #ffffff;
+  --secondary-bg: #2e75f8;
+  --link: #082c42;
+  --link-hover: #0362bb;
   --shadow: rgba(0, 0, 0, 0.3);
 }
 /*  */

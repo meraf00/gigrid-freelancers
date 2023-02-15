@@ -149,7 +149,9 @@ header {
   padding: .5rem;
 }
 
-.contract-form input {
+.contract-form input,
+.contract-form input[type='submit'],
+.contract-form select {  
   padding: .3rem;
   margin-bottom: .7rem;
 }
