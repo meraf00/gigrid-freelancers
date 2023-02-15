@@ -331,15 +331,7 @@ class Job(db.Model):
                 Job: job object if job associated with they key is found, None otherwise
         """
 
-        job = Job.query.filter(
-            # db.or_(
-                # Job.title == "%{}%".format(key),
-                Job.title == key
-                # Job.description == "%{}%".format(key),
-                # Job.experience_level == key.upper()
-            # )
-        )
-        print(job)
+        job = Job.query.filter_by(title = key).all()
         return job
 
     @staticmethod

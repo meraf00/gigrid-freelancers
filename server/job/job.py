@@ -69,10 +69,12 @@ def see_posted_jobs(user_id):
 @job_bp.route('/filterJob', methods=['POST'])
 def filter():
     key = request.json.get("key")
+    # print(key)
     jobs = Job.filter_job(key)
     jsonList = []
-
+    # print(jobs)
     for job in jobs:
+        # print("hereeeeeeeeeee")
         jsonList.append({"id": job.id,
                          "title": job.title,
                          "description": job.description,

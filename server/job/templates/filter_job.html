@@ -13,62 +13,8 @@
             <input id="search-bar" type="text" placeholder="search jobs...">
             <button type="submit" onclick="filter()">Search</button>
         </div>
-        
+        <div class="posted-jobs">
 
-        
-        <div class="ccards posted-jobs">
-            <div class="ccard">
-                <div class="ccard-left">
-                    <i class="ccard-img fa-solid fa-briefcase fa-3x"></i>
-                </div>
-                <div class="ccard-right">
-                    <div class="ccard-title">
-                        Web Developer
-                    </div>
-                    <div class="ccard-desc">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore in deleniti expedita magnam quidem adipisci repudiandae quam assumenda impedit beatae dicta autem voluptatem, dolor aperiam velit, corporis perspiciatis ad? Quasi, minus magnam. Accusantium explicabo fugiat ea officiis repellendus! Iure, perferendis!
-                    </div>
-                </div>
-            </div>
-            <div class="ccard">
-                <div class="ccard-left">
-                    <i class="ccard-img fa-solid fa-briefcase fa-3x"></i>
-                </div>
-                <div class="ccard-right">
-                    <div class="ccard-title">
-                        Web Developer
-                    </div>
-                    <div class="ccard-desc">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore in deleniti expedita magnam quidem adipisci repudiandae quam assumenda impedit beatae dicta autem voluptatem, dolor aperiam velit, corporis perspiciatis ad? Quasi, minus magnam. Accusantium explicabo fugiat ea officiis repellendus! Iure, perferendis!
-                    </div>
-                </div>
-            </div>
-            <div class="ccard">
-                <div class="ccard-left">
-                    <i class="ccard-img fa-solid fa-briefcase fa-3x"></i>
-                </div>
-                <div class="ccard-right">
-                    <div class="ccard-title">
-                        Web Developer
-                    </div>
-                    <div class="ccard-desc">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore in deleniti expedita magnam quidem adipisci repudiandae quam assumenda impedit beatae dicta autem voluptatem, dolor aperiam velit, corporis perspiciatis ad? Quasi, minus magnam. Accusantium explicabo fugiat ea officiis repellendus! Iure, perferendis!
-                    </div>
-                </div>
-            </div>
-            <div class="ccard">
-                <div class="ccard-left">
-                    <i class="ccard-img fa-solid fa-briefcase fa-3x"></i>
-                </div>
-                <div class="ccard-right">
-                    <div class="ccard-title">
-                        Web Developer
-                    </div>
-                    <div class="ccard-desc">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore in deleniti expedita magnam quidem adipisci repudiandae quam assumenda impedit beatae dicta autem voluptatem, dolor aperiam velit, corporis perspiciatis ad? Quasi, minus magnam. Accusantium explicabo fugiat ea officiis repellendus! Iure, perferendis!
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -123,17 +69,17 @@
     BASE_URL = `http://${url.hostname}:${url.port}`;
     async function filter(){
         const keyword = document.getElementById('search-bar').value.toLowerCase()
-        // console.log(keyword)
+
+        document.querySelector(".posted-jobs").classList.toggle("show", true);
 
         let jobs = await fetch(`${BASE_URL}/job/filterJob`, {
-                                method: "post",
-                                headers: {
-                                // 'Accept': 'application/json',
-                                'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    key: keyword
-                                })
+                    method: "post",
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        key: keyword
+                    })
                 });
         jobs = await jobs.json()
 
@@ -157,7 +103,7 @@
                 </p>
             </div>
         </div>`;
-    }
+        }
     }
 </script>
     
