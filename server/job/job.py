@@ -69,12 +69,9 @@ def see_posted_jobs(user_id):
 @job_bp.route('/filterJob', methods=['POST'])
 def filter():
     key = request.json.get("key")
-    # print(key)
     jobs = Job.filter_job(key)
     jsonList = []
-    # print(jobs)
     for job in jobs:
-        # print("hereeeeeeeeeee")
         jsonList.append({"id": job.id,
                          "title": job.title,
                          "description": job.description,
@@ -89,7 +86,11 @@ def filter():
     response.headers["Content-Type"] = "application/json"
     return response
 
-
+@job_bp.route('/delete', methods=['POST'])
+def delete():
+    id = request.json.get("id")
+    job = db.session.query(Job).filter(Job.id==id).first()
+    db.session.delete(job)
 
 
 

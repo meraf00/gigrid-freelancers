@@ -86,14 +86,31 @@
               ${job.budget} ETB
             </p>
         </div>
-        <button class="delete" onclick="delete()" >Delete Post</button>
+        <button class="delete" onclick="deletePost()">Delete Post
+          <div style="display: none;" class="id">${job.id}</div></button>
+        
       </div>
   </div>`;
     }
   }
 
-  function deletePost() {
-    
+  async function deletePost() {
+    let id = document.nextSibling.innerHTML
+    console.log(id)
+
+    let jobs = await fetch(`${BASE_URL}/job/delete`, {
+                    method: "post",
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: id
+                    })
+                });
+        jobs = await jobs.json()
+
+   
+
   }
 
 </script>
