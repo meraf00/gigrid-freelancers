@@ -289,6 +289,8 @@ class Attachment(db.Model):
     file_id = db.Column(db.String(36), db.ForeignKey(
         File.id), primary_key=True)
 
+    files = db.relationship(File)
+
 
 class Job(db.Model):
     """Job database model
@@ -319,7 +321,7 @@ class Job(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey(User.id))
     post_time = db.Column(db.DateTime, default=datetime.now)
 
-    attachment = db.relationship(Attachment, foreign_keys=[attachment_id])
+    attachments = db.relationship(Attachment, foreign_keys=[attachment_id])
     owner = db.relationship(User, foreign_keys=[owner_id])
 
     @staticmethod
@@ -350,7 +352,7 @@ class Job(db.Model):
                 Job: job object if job associated with they key is found, None otherwise
         """
 
-        job = Job.query.filter_by(title=key).all()
+        job = Job.query.filter(Job.title.like(f"%{key}%")).all()
         return job
 
     @staticmethod

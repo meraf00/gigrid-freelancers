@@ -36,11 +36,12 @@
 }
 
 .posted-jobs {
-    display: none
+    display: none;
+    margin-top: 3rem;
 }
 
 .posted-jobs.show {
-    display: block
+    display: block    
 }
 
 .ccard-rightmost {
@@ -61,4 +62,15 @@
     100% {        
         opacity: 0;
     }
+}
+
+.job-desc {
+    max-width: 70%;
+    margin: 1rem 0;           
+}
+
+.highlight {
+    background-color: rgb(231, 248, 244);
+    padding: .1rem .5rem;
+    font-weight: 500;
 }

@@ -1,24 +1,24 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block head %}
+<link
+  rel="stylesheet"
+  href="{{url_for('job_bp.static', filename='css/style.css')}}"
+/>
+<script
+  src="https://kit.fontawesome.com/935ba23ae2.js"
+  crossorigin="anonymous"
+></script>
+{% endblock %} {% block body %}
 
-{% block head %}
-<link rel="stylesheet" href="{{url_for('job_bp.static', filename='css/style.css')}}" />
-<script src="https://kit.fontawesome.com/935ba23ae2.js" crossorigin="anonymous"></script>
-{% endblock %}
+<section>
+  <div class="search">
+    <h1>Recently added jobs</h1>
+    <input id="search-bar" type="text" placeholder="search jobs..." />
+    <button type="submit" onclick="filter()">Search</button>
+  </div>
+  <div class="posted-jobs"></div>
+</section>
 
-{% block body %}
-
-    <section>
-        <div class="search">
-            <h1>Recently added jobs</h1>
-            <input id="search-bar" type="text" placeholder="search jobs...">
-            <button type="submit" onclick="filter()">Search</button>
-        </div>
-        <div class="posted-jobs">
-
-        </div>
-    </section>
-
-    <section>
+<!-- <section>
         <h1>Explore Categories</h1>
 
         <div class="category-container">
@@ -63,32 +63,32 @@
                 </p>
             </div>
         </div>
-    </section>
+    </section> -->
 <script>
-    const url = new URL(document.URL);
-    BASE_URL = `http://${url.hostname}:${url.port}`;
-    async function filter(){
-        const keyword = document.getElementById('search-bar').value.toLowerCase()
+  const url = new URL(document.URL);
+  BASE_URL = `http://${url.hostname}:${url.port}`;
+  async function filter() {
+    const keyword = document.getElementById("search-bar").value.toLowerCase();
 
-        document.querySelector(".posted-jobs").classList.toggle("show", true);
+    document.querySelector(".posted-jobs").classList.toggle("show", true);
 
-        let jobs = await fetch(`${BASE_URL}/job/filterJob`, {
-                    method: "post",
-                    headers: {
-                    'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        key: keyword
-                    })
-                });
-        jobs = await jobs.json()
-        
-        let noJobs = true;
-        let contain = document.querySelector(".posted-jobs");
-        contain.innerHTML = "";
-        for (job of jobs) {
-            noJobs = false;
-            contain.innerHTML += `<div class="ccard">
+    let jobs = await fetch(`${BASE_URL}/job/filterJob`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        key: keyword,
+      }),
+    });
+    jobs = await jobs.json();
+
+    let noJobs = true;
+    let contain = document.querySelector(".posted-jobs");
+    contain.innerHTML = "";
+    for (job of jobs) {
+      noJobs = false;
+      contain.innerHTML += `<div class="ccard" onclick="window.location.href='${BASE_URL}/job/${job.id}'">
             <div class="ccard-left">
                 <i class="ccard-img fa-solid fa-briefcase fa-2x"></i>
             </div>
@@ -105,11 +105,13 @@
                 </p>
             </div>
         </div>`;
-        }
-        if (noJobs){
-            contain.innerHTML += `<div>No Matching Jobs</div>`
-        }
     }
+    if (noJobs) {
+      contain.innerHTML += `<div>No Matching Jobs</div>`;
+    }
+  }
+
+  filter();
 </script>
-    
+
 {% endblock %}

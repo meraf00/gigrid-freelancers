@@ -25,6 +25,15 @@ def job():
         pass
 
 
+@job_bp.route('/<id>')
+def get_job(id):
+    job = Job.get(id)
+    if job:
+        return render_template('job.html', job=job)
+
+    return redirect(url_for('job_bp.search'))
+
+
 @job_bp.route('/search')
 def search():
     return render_template('filter_job.html')
