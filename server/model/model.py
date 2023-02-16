@@ -141,6 +141,17 @@ class User(db.Model, UserMixin):
                         amount += e.amount
             return float(amount)
 
+    def get_contracts(self):
+        if self.user_type == UserType.FREELANCER:
+            return self.contracts
+
+        contracts = []
+        for job in self.get_posted_jobs():
+            for contract in Contract.query.filter_by(job_id=job.id).all():
+                contracts.append(contract)
+
+        return contracts
+
     def __repr__(self):
         return f"User(id={self.id}, email={self.email})"
 
@@ -420,6 +431,21 @@ class Contract(db.Model):
                           foreign_keys=[job_id], uselist=False)
     worker = db.relationship(User, backref='contracts',
                              foreign_keys=[worker_id])
+
+    @staticmethod
+    def get(contract_id: str) -> Optional[User]:
+        """Gets user by id
+
+        Args:
+            contract_id (str): user id
+
+        Returns:
+            Contract: user object if user is found, None otherwise
+        """
+
+        return Contract.query.filter_by(id=contract_id).first()
+
+
 
     def already_exists(job_id, worker_id):
         try:

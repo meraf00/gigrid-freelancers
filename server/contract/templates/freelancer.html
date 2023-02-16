@@ -1,0 +1,120 @@
+{% extends 'base.html' %} {% block head %}
+<link
+  rel="stylesheet"
+  href="{{url_for('job_bp.static', filename='css/style.css')}}"
+/>
+{% endblock %} {% block body %} {% if message %}
+<div class="message">{{message}}</div>
+{% endif %}
+<section class="container" style="min-height: 60vh">
+  <div class="call-to-action">
+    <button id="active" class="tab" onclick="active()">Active</button>
+    <button id="pending" class="tab" onclick="pending()">Pending</button>
+  </div>
+
+  <div class="active-contracts hidden">
+    {% for contract in current_user.get_contracts() %} {% if contract.status ==
+    "A" %}
+    <div class="underlined">
+      <div class="user-title" data-target="{{contract.id}}">
+        <div class="title">
+          <i class="fa fa-chevron-right" aria-hidden="true"></i>
+          <h4 style="margin-left: 1rem">{{contract.job.title}}</h4>
+        </div>
+
+        <a href="{{url_for('chat_bp.message')}}">Contact</a>
+      </div>
+
+      <div class="hidden" id="{{contract.id}}">
+        <div class="job-desc">
+          <h4>Contract budget</h4>
+          <p class="highlight">{{contract.escrow[0].amount}} ETB</p>
+        </div>
+        <div class="job-desc">
+          <h4>Deadline</h4>
+          <p class="highlight">{{contract.deadline}}</p>
+        </div>
+      </div>
+    </div>
+    {% endif %} {% endfor %}
+  </div>
+
+  <div class="pending">
+    {% for contract in current_user.get_contracts() %} {% if not contract.status
+    %}
+    <div class="underlined">
+      <div class="user-title" data-target="{{contract.id}}">
+        <div class="title">
+          <i class="fa fa-chevron-right" aria-hidden="true"></i>
+          <h4 style="margin-left: 1rem">{{contract.job.title}}</h4>
+        </div>
+
+        <a href="{{url_for('chat_bp.message')}}">Contact</a>
+      </div>
+
+      <div class="hidden" id="{{contract.id}}">
+        <div class="job-desc">
+          <h4>Contract budget</h4>
+          <p class="highlight">{{contract.escrow[0].amount}} ETB</p>
+        </div>
+        <div class="job-desc">
+          <h4>Deadline</h4>
+          <p class="highlight">{{contract.deadline}}</p>
+        </div>
+        <div class="flex justify-start">
+          <a
+            href="{{url_for('contract_bp.accept_or_reject_contract', contract_id=contract.id, response='accept')}}"
+            >Accept</a
+          >
+          <a
+            href="{{url_for('contract_bp.accept_or_reject_contract', contract_id=contract.id, response='reject')}}"
+            >Decline</a
+          >
+        </div>
+      </div>
+    </div>
+    {% endif %} {% endfor %}
+  </div>
+</section>
+
+<script>
+  function active() {
+    document.getElementById("active").classList.toggle("active", true);
+    document
+      .querySelector(".active-contracts")
+      .classList.toggle("hidden", false);
+    document.getElementById("pending").classList.toggle("active", false);
+    document.querySelector(".pending").classList.toggle("hidden", true);
+  }
+  function pending() {
+    document.getElementById("active").classList.toggle("active", false);
+    document
+      .querySelector(".active-contracts")
+      .classList.toggle("hidden", true);
+    document.getElementById("pending").classList.toggle("active", true);
+    document.querySelector(".pending").classList.toggle("hidden", false);
+  }
+
+  let titles = document.querySelectorAll(".user-title");
+  titles.forEach((title) => {
+    title.addEventListener("click", () => {
+      const chevron = title.querySelector("i");
+      if (chevron.classList.contains("fa-chevron-right")) {
+        chevron.classList.toggle("fa-chevron-right", false);
+        chevron.classList.toggle("fa-chevron-down", true);
+        document
+          .getElementById(title.dataset.target)
+          .classList.toggle("hidden", false);
+      } else {
+        chevron.classList.toggle("fa-chevron-right", true);
+        chevron.classList.toggle("fa-chevron-down", false);
+        document
+          .getElementById(title.dataset.target)
+          .classList.toggle("hidden", true);
+      }
+    });
+  });
+  pending();
+</script>
+
+{% endblock %}

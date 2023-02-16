@@ -118,7 +118,8 @@ def send_proposal():
     content = request.form.get("content")
     attachment = request.files.get("attachment")
 
-    if Job.get(job_id):
+    job = Job.get(job_id)
+    if job:
         attachment_id = None
 
         file_id = None
@@ -139,11 +140,12 @@ def send_proposal():
         try:
             db.session.add(new_proposal)
             db.session.commit()
-            return "OK"
+            return render_template("proposal_response.html", status=200, job=job)
         except IntegrityError:
             db.session.rollback()
-            return "NOT OK"
-    return "Not ok"
+            return render_template("proposal_response.html", message="You have already submitted proposal for this job.", status=400)
+
+    return render_template("proposal_response.html", message="Contract already exists.", status=400)
 
 
 @proposal_bp.route("/create/<job_id>")
@@ -153,5 +155,5 @@ def create_proposal(job_id):
         job = Job.get(job_id)
         if job:
             return render_template("proposal.html", job=job)
-        
+
     return redirect(url_for("job_bp.search"))

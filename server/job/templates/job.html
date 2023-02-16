@@ -42,7 +42,9 @@
 {% if current_user.id == job.owner_id %}
 <section>
   <h2>Submitted proposals</h2>
-  {% for proposal in job.proposals %}
+  {% if not job.proposals %}
+  <p>You haven't received any proposals yet.</p>
+  {% endif %} {% for proposal in job.proposals %}
   <div class="underlined">
     <div class="user-title" data-target="{{proposal.worker_id}}">
       <div class="title">

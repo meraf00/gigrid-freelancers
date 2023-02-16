@@ -61,12 +61,13 @@ def accept_or_reject_contract(contract_id, response):
     if contract.status != None:
         return "Unauthorized"
 
-    if contract.worker_id == current_user.worker_id:
+    if contract.worker_id == current_user.id:
         if response == "accept":
             contract.status = ContractStatus.ACCEPTED
-            contract.escrow.date_of_initiation = datetime.now()
+            contract.escrow[0].date_of_initiation = datetime.now()
         elif response == "reject":
             contract.status = ContractStatus.REJECTED
+            db.session.delete(contract)
         db.session.commit()
 
         return redirect(url_for("contract_bp.contracts"))
@@ -78,6 +79,6 @@ def accept_or_reject_contract(contract_id, response):
 @login_required
 def contracts():
     if current_user.user_type == UserType.EMPLOYER:
-        return render_template("")
+        return render_template("employer.html")
 
-    return render_template("")
+    return render_template("freelancer.html")

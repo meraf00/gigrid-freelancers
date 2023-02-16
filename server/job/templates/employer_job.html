@@ -72,7 +72,7 @@
 
     for (job of jobs) {
       contain.innerHTML += `
-      <div class="ccard">                            
+      <div class="ccard" onclick="window.location.href='${BASE_URL}/job/${job.id}'">
         <div class="ccard-rightmost">
           <div class="ccard-left">
             <i class="ccard-img fa-solid fa-briefcase fa-2x"></i>
