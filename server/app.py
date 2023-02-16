@@ -159,10 +159,11 @@ def register_employer():
 def files(id):
     message = Message.query.filter_by(
         content_type=ContentType.FILE, content=id).first()
-    if current_user.id in [message.chat.u1.id, message.chat.u2.id]:
-        return send_file(File.get(id).file_path)
+    return send_file(File.get(id).file_path)
+    # if current_user.id in [message.chat.u1.id, message.chat.u2.id]:
+    #     return send_file(File.get(id).file_path)
 
-    return "Unauthorize file access"
+    # return "Unauthorize file access"
 
 
 if __name__ == "__main__":

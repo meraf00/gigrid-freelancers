@@ -9,7 +9,8 @@ from flask_login import login_required, current_user
 
 from flask_socketio import SocketIO, join_room
 
-from model import User, Chat, Message, File, ContentType
+from model import User, Chat, Message, File, ContentType, UserType
+
 from utils import FileManager
 from auth import AuthenticationManager, load_user
 from .ChatManager import ChatManager
@@ -35,6 +36,18 @@ def text_only(raw_html):
 @login_required
 def message():
     return render_template('messages.html', text_only=text_only)
+
+
+@chat_bp.route('/<user_id>')
+@login_required
+def initiate_message(user_id):
+    if current_user.user_type == UserType.EMPLOYER:
+        chat_mgr = ChatManager(current_user.id)
+
+        if User.get(user_id):
+            chat_mgr.initiate_chat(user_id)
+
+    return redirect(url_for('chat_bp.message'))
 
 
 @chat_bp.route('/', methods=['POST'])

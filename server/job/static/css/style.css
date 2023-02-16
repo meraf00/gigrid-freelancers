@@ -74,3 +74,22 @@
     padding: .1rem .5rem;
     font-weight: 500;
 }
+
+.user-title {
+    margin-top: .5rem;
+    padding: .7rem;
+    background-color: powderblue;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.user-title .title {
+    display: flex;
+    align-items: center;
+}
+
+.user-title:hover {    
+    background-color: rgba(176, 224, 230, 0.767);
+}

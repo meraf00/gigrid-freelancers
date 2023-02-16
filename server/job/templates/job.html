@@ -28,8 +28,7 @@
   <p class="job-desc">
     <a href="{{url_for('files', id=attachment.file_id)}}"></a>
   </p>
-  {% endfor %} {% endif %}
-
+  {% endfor %} {% endif %} {% if current_user.user_type == "FREELANCER" %}
   <div class="mt-3">
     <a
       class="button small"
@@ -37,6 +36,62 @@
       >Apply</a
     >
   </div>
+  {% endif %}
 </section>
 
+{% if current_user.id == job.owner_id %}
+<section>
+  <h2>Submitted proposals</h2>
+  {% for proposal in job.proposals %}
+  <div class="underlined">
+    <div class="user-title" data-target="{{proposal.worker_id}}">
+      <div class="title">
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        <h4 style="margin-left: 1rem">
+          {{proposal.sender.firstname}} {{proposal.sender.lastname}}
+        </h4>
+      </div>
+
+      <a
+        href="{{url_for('chat_bp.initiate_message', user_id=proposal.worker_id)}}"
+        >Contact</a
+      >
+    </div>
+
+    <div class="hidden" id="{{proposal.worker_id}}">
+      <p>{{proposal.content}}</p>
+
+      {% if proposal.attachments %}
+      <p>
+        <a href="{{url_for('files', id=proposal.attachments.file_id)}}"
+          >Attachment</a
+        >
+      </p>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</section>
+{%endif%}
+<script>
+  let titles = document.querySelectorAll(".user-title");
+  titles.forEach((title) => {
+    title.addEventListener("click", () => {
+      const chevron = title.querySelector("i");
+      if (chevron.classList.contains("fa-chevron-right")) {
+        chevron.classList.toggle("fa-chevron-right", false);
+        chevron.classList.toggle("fa-chevron-down", true);
+        document
+          .getElementById(title.dataset.target)
+          .classList.toggle("hidden", false);
+      } else {
+        chevron.classList.toggle("fa-chevron-right", true);
+        chevron.classList.toggle("fa-chevron-down", false);
+        document
+          .getElementById(title.dataset.target)
+          .classList.toggle("hidden", true);
+      }
+    });
+  });
+</script>
 {% endblock %}

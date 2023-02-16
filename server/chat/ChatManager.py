@@ -25,6 +25,9 @@ class ChatManager:
             str: the created chat id
         """
 
+        if Chat.get_chat(self.user_id, receiver_id):
+            return
+
         chat = Chat(user_1=self.user_id, user_2=receiver_id)
 
         db.session.add(chat)

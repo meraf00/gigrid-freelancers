@@ -109,9 +109,9 @@
   </section>
 
   <!-- Detail panel -->
-  <section class="chat-detail" id="chat-detail">
-    
-  </section>
+  {% if current_user.user_type == "EMPLOYER" %}
+  <section class="chat-detail" id="chat-detail"></section>
+  {% endif %}
 </header>
 
 <input type="hidden" id="user_token" value="{{current_user.token}}" />

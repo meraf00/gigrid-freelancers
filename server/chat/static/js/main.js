@@ -84,10 +84,12 @@ const openChat = async (target) => {
 
   const jobs = await getJobs(current_user_id);
 
-  chat_detail.innerHTML =
-    "<div style='text-align: center; margin-bottom: 1rem;'><strong>Propose contract</strong></div>";
-  chat_detail.innerHTML += user_detail(user_name, user_type);
-  chat_detail.innerHTML += create_contract(user_id, jobs);
+  if (chat_detail) {
+    chat_detail.innerHTML =
+      "<div style='text-align: center; margin-bottom: 1rem;'><strong>Propose contract</strong></div>";
+    chat_detail.innerHTML += user_detail(user_name, user_type);
+    chat_detail.innerHTML += create_contract(user_id, jobs);
+  }
 };
 
 // Socket Event Handling

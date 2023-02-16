@@ -126,7 +126,7 @@ def send_proposal():
             file_id = file_mgr.save(attachment)
 
             attachment_id = uuid4()
-            new_attachement = Attachment(attachment_id, file_id)
+            new_attachement = Attachment(id=attachment_id, file_id=file_id)
             db.session.add(new_attachement)
 
         new_proposal = Proposal(
