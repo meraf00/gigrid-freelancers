@@ -57,8 +57,11 @@ def home():
 
 
 @app.route("/finance")
+@login_required
 def finance():
-    return render_template('finance.html')
+    if current_user.user_type == UserType.EMPLOYER:
+        return render_template('emp_finance.html')
+    return render_template('free_finance.html')
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -104,11 +107,11 @@ def register_freelancer():
         date = request.form.get("date")
         email = request.form.get("email")
         password = request.form.get("password")
-        resume = request.files["file"]
+        resume = request.files.get("file")
 
-        file_id = file_mgr.save(resume)
-        
-
+        file_id = None
+        if resume:
+            file_id = file_mgr.save(resume)
 
         new_user = User(firstname=fname, lastname=lname,
                         email=email, password=generate_password_hash(password),

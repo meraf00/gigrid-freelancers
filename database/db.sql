@@ -14,7 +14,8 @@ CREATE TABLE User(
     date_of_birth DATETIME NOT NULL,
     user_type ENUM('FREELANCER', 'EMPLOYER'),
     token VARCHAR(200),
-    balance FLOAT DEFAULT 0
+    balance FLOAT DEFAULT 0,
+    resume_id VARCHAR(36)
 );
 
 

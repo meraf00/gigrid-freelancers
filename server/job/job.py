@@ -22,7 +22,12 @@ def job():
     if current_user.user_type == UserType.EMPLOYER:
         return render_template('employer_job.html', message=message)
     else:
-        return render_template('filter_job.html', message=message)
+        pass
+
+
+@job_bp.route('/search')
+def search():
+    return render_template('filter_job.html')
 
 
 @job_bp.route('/', methods=['POST'])
@@ -66,6 +71,7 @@ def see_posted_jobs(user_id):
     response.headers["Content-Type"] = "application/json"
     return response
 
+
 @job_bp.route('/filterJob', methods=['POST'])
 def filter():
     key = request.json.get("key")
@@ -86,12 +92,14 @@ def filter():
     response.headers["Content-Type"] = "application/json"
     return response
 
+
 @job_bp.route('/delete', methods=['POST'])
 def delete():
     id = request.json.get("id")
-    job = db.session.query(Job).filter(Job.id==id).first()
+    job = db.session.query(Job).filter(Job.id == id).first()
     db.session.delete(job)
-
+    db.session.commit()
+    return ""
 
 
 @job_bp.route('/uploadfile', methods=['POST'])

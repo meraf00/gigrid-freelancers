@@ -95,6 +95,7 @@ class ChapaPaymentHandler(PaymentHandler):
                                  data=data, headers=self.headers)
 
         response_json = response.json()
+        print(response_json)
 
         if response_json['status'] == 'success':
             return response_json['data']['checkout_url']

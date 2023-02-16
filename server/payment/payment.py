@@ -18,10 +18,10 @@ payment_handler: ChapaPaymentHandler = ChapaPaymentHandler(
     os.getenv('CHAPA_SECRET_KEY'))
 
 
-@payment_bp.route("/")
+@payment_bp.route("/", methods=["POST"])
 @login_required
 def deposite():
-    amount = request.args.get("amount")
+    amount = request.form.get("amount")
 
     ref = f'TX-{uuid4()}'
     
@@ -32,13 +32,15 @@ def deposite():
         'first_name': current_user.firstname,
         'last_name': current_user.lastname,
         'tx_ref': ref,
-        'callback_url': url_for('payment_bp.verify_transaction'),
-        'return_url': url_for('home'),
+        'callback_url': url_for('payment_bp.verify_transaction', _external=True),
+        'return_url': url_for('home', _external=True),
         'customization[title]': 'Freelancers',
         'customization[description]': 'Send payment'
     })
 
-    return redirect(checkout_url)
+    if checkout_url:
+        return redirect(checkout_url)
+    return redirect(url_for('finance'))
 
 
 @payment_bp.route("/verify")

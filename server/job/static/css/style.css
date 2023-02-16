@@ -46,7 +46,12 @@
 .ccard-rightmost {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
+}
+
+.ccard .fa-times:hover { 
+    color: rgba(240, 21, 21, 0.699); 
+    transition: color .1s ease-in-out;  
 }
 
 @keyframes fadeout {

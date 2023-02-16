@@ -67,51 +67,47 @@
     jobs = await jobs.json();
 
     let contain = document.querySelector(".posted-jobs");
+
     contain.innerHTML = "";
+
     for (job of jobs) {
-      contain.innerHTML += `<div class="ccard">
-      <div class="ccard-left">
-          <i class="ccard-img fa-solid fa-briefcase fa-2x"></i>
-      </div>
-      <div class="ccard-rightmost">
-        <div class="ccard-right">
-            <div class="ccard-title">
-                <span>${job.title}</span>
-                <span class="ccard-xp">[${job.experience_level}]</span>
-            </div>
-            <div class="ccard-desc">
-                ${job.description}
-            </div>          
-            <p class="ccard-budget">
-              ${job.budget} ETB
-            </p>
+      contain.innerHTML += `
+      <div class="ccard">                            
+        <div class="ccard-rightmost">
+          <div class="ccard-left">
+            <i class="ccard-img fa-solid fa-briefcase fa-2x"></i>
+          </div>
+          <div class="ccard-right">
+              <div class="ccard-title">
+                  <span>${job.title}</span>
+                  <span class="ccard-xp">[${job.experience_level}]</span>
+              </div>
+              <div class="ccard-desc">
+                  ${job.description}
+              </div>          
+              <p class="ccard-budget">
+                ${job.budget} ETB
+              </p>
+          </div>
         </div>
-        <button class="delete" onclick="deletePost()">Delete Post
-          <div style="display: none;" class="id">${job.id}</div></button>
         
-      </div>
-  </div>`;
+        <div><i class="fa fa-times fa-2x" onclick="deletePost('${job.id}')"></i></div>
+      </div>`;
     }
   }
 
-  async function deletePost() {
-    let id = document.nextSibling.innerHTML
-    console.log(id)
+  async function deletePost(id) {
+    await fetch(`${BASE_URL}/job/delete`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+      }),
+    });
 
-    let jobs = await fetch(`${BASE_URL}/job/delete`, {
-                    method: "post",
-                    headers: {
-                    'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: id
-                    })
-                });
-        jobs = await jobs.json()
-
-   
-
+    showPosted();
   }
-
 </script>
 {% endblock %}

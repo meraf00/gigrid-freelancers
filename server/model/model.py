@@ -30,7 +30,7 @@ class ContractStatus:
     """Data class to represent whether contract is accepted or rejected"""
 
     ACCEPTED = 'A'
-    REJECTED = 'R'    
+    REJECTED = 'R'
 
 
 class ContentType:
@@ -57,6 +57,7 @@ class User(db.Model, UserMixin):
         balance (float): the amount of money a user has in the system
         initiated_chats (list[Chat]): list of Chat objects initiated by this user
         joined_chats (list[Chat]): list of Chat objects joined by this user
+        resume_id (str): file id referencing user resume
     """
 
     id = db.Column(db.Integer, primary_key=True)
@@ -68,7 +69,7 @@ class User(db.Model, UserMixin):
     user_type = db.Column(db.Enum(UserType.FREELANCER, UserType.EMPLOYER))
     token = db.Column(db.String(200))
     balance = db.Column(db.Float, default=0)
-    resume_id = db.Column(db.String(100))
+    resume_id = db.Column(db.String(36))
 
     @property
     def chats(self):
@@ -117,11 +118,28 @@ class User(db.Model, UserMixin):
             jobs (list): list of jobs with owner_id of id
         """
 
-        job = Job.query.filter(
+        jobs = Job.query.filter(
             Job.owner_id == self.id
         ).all()
 
-        return job
+        return jobs
+
+    def get_fund_in_escrow(self):
+        if self.user_type == UserType.FREELANCER:
+            amount = 0
+            for contract in self.contracts:
+                for e in contract.escrow:
+                    amount += e.amount
+
+            return float(amount)
+
+        else:
+            amount = 0
+            for job in self.get_posted_jobs():
+                for contract in Contract.query.filter_by(job_id=job.id).all():
+                    for e in contract.escrow:
+                        amount += e.amount
+            return float(amount)
 
     def __repr__(self):
         return f"User(id={self.id}, email={self.email})"
@@ -332,7 +350,7 @@ class Job(db.Model):
                 Job: job object if job associated with they key is found, None otherwise
         """
 
-        job = Job.query.filter_by(title = key).all()
+        job = Job.query.filter_by(title=key).all()
         return job
 
     @staticmethod
@@ -350,7 +368,7 @@ class Job(db.Model):
             Job.owner_id == owner_id
         )
         return jobs
-    
+
     @staticmethod
     def get_all_jobs() -> list[Job]:
         """Gets all posted Jobs
@@ -371,7 +389,7 @@ class Job(db.Model):
             None
         """
         Job.query.filter_by(id=id).delete()
-        
+
     def __repr__(self):
         return f"Job(id={self.id}, job_title={self.title}, experience_level={self.experience_level}, job_owner={self.owner_id}, post_time={self.post_time}, job_description={self.description})"
 
@@ -396,8 +414,9 @@ class Contract(db.Model):
     deadline = db.Column(db.DateTime)
     status = db.Column(db.String(1))
 
-    job = db.relationship(Job, backref='contract', foreign_keys=[job_id])
-    worker = db.relationship(User, backref='contract',
+    job = db.relationship(Job, backref='contract',
+                          foreign_keys=[job_id], uselist=False)
+    worker = db.relationship(User, backref='contracts',
                              foreign_keys=[worker_id])
 
     def already_exists(job_id, worker_id):
@@ -424,7 +443,7 @@ class Escrow(db.Model):
     amount = db.Column(db.Float)
     date_of_initiation = db.Column(db.DateTime, default=datetime.now)
 
-    contract = db.relationship(Contract, backref='escrow')
+    contract = db.relationship(Contract, backref='escrow', uselist=False)
 
     @staticmethod
     def get(escrow_id: str) -> Optional[Escrow]:
@@ -440,7 +459,7 @@ class Escrow(db.Model):
         return Escrow.query.filter_by(id=escrow_id).first()
 
     def __repr__(self):
-        return f"Escrow(id={self.id}, job={self.job_id}, to={self.worker_id}, amount={self.amount})"
+        return f"Escrow(id={self.id}, contract={self.contract_id}, amount={self.amount})"
 
 
 class Proposal(db.Model):
