@@ -130,6 +130,8 @@ class User(db.Model, UserMixin):
         if self.user_type == UserType.FREELANCER:
             amount = 0
             for contract in self.contracts:
+                if contract.status in [ContractStatus.FINISED, ContractStatus.REJECTED]:
+                    continue
                 for e in contract.escrow:
                     amount += e.amount
 
@@ -139,6 +141,8 @@ class User(db.Model, UserMixin):
             amount = 0
             for job in self.get_posted_jobs():
                 for contract in Contract.query.filter_by(job_id=job.id).all():
+                    if contract.status in [ContractStatus.FINISED, ContractStatus.REJECTED]:
+                        continue
                     for e in contract.escrow:
                         amount += e.amount
             return float(amount)
@@ -456,7 +460,10 @@ class Contract(db.Model):
 
     def already_exists(job_id, worker_id):
         try:
-            if Contract.query.filter_by(job_id=job_id, worker_id=worker_id).one():
+            contract = Contract.query.filter(Contract.job_id == job_id,
+                                             Contract.worker_id == worker_id,
+                                             Contract.status != ContractStatus.REJECTED).one()
+            if contract:
                 return True
         except NoResultFound:
             return False

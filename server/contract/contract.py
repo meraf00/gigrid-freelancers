@@ -71,7 +71,10 @@ def accept_or_reject_contract(contract_id, response):
             contract.escrow[0].date_of_initiation = datetime.now()
         elif response == "reject":
             contract.status = ContractStatus.REJECTED
-            db.session.delete(contract)
+            escrow = contract.escrow[0]
+            employer = User.get(contract.job.owner_id)
+            employer.balance += escrow.amount
+            # db.session.delete(contract)
         db.session.commit()
 
         return redirect(url_for("contract_bp.contracts"))
@@ -125,6 +128,11 @@ def close_contract(contract_id):
         return redirect(url_for("contract_bp.contracts"))
 
     contract.status = ContractStatus.FINISED
+
+    escrow = contract.escrow[0]
+
+    worker = User.get(contract.worker_id)
+    worker.balance += escrow.amount
 
     db.session.commit()
 
