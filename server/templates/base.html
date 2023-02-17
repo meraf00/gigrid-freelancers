@@ -59,7 +59,9 @@
         {% if current_user.firstname %}
         <li><a href="{{url_for('finance')}}">Finance</a></li>
 
+        {% if current_user.user_type == "EMPLOYER" %}
         <li><a href="{{url_for('job_bp.job')}}">Jobs</a></li>
+        {% endif %}
         <li><a href="{{url_for('contract_bp.contracts')}}">Contracts</a></li>
         <li><a href="{{url_for('chat_bp.message')}}">Messages</a></li>
 

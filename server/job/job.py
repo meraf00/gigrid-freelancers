@@ -21,8 +21,7 @@ def job():
     message = request.args.get("message")
     if current_user.user_type == UserType.EMPLOYER:
         return render_template('employer_job.html', message=message)
-    else:
-        pass
+    return redirect(url_for("search"))
 
 
 @job_bp.route('/<id>')

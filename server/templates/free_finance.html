@@ -11,13 +11,14 @@
       </tr>
     </thead>
     <tbody>
-      {% for job_history in current_user.job_history %}
+      {% for contract in current_user.get_contracts() %} {% if contract.status
+      == "F" %}
       <tr>
-        <td>{{job_history.job.title}}</td>
-        <td>{{job_history.payment}}</td>
-        <td>{{job_history.completion_date}}</td>
+        <td>{{contract.job.title}}</td>
+        <td>{{contract.escrow[0].amount}}</td>
+        <td>{{contract.deadline}}</td>
       </tr>
-      {% endfor %}
+      {% endif %} {% endfor %}
     </tbody>
   </table>
 

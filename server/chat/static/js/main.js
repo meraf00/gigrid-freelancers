@@ -72,7 +72,7 @@ const openChat = async (target) => {
   );
 
   document
-    .querySelectorAll("chat-item")
+    .querySelectorAll(".chat-item")
     .forEach((chatItem) => chatItem.classList.toggle("active", false));
 
   target.classList.toggle("active", true);
