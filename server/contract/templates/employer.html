@@ -34,6 +34,63 @@
           <h4>Deadline</h4>
           <p class="highlight">{{contract.deadline}}</p>
         </div>
+        <div class="job-desc">
+          <div class="user-title" data-target="{{contract.id}}-submissions">
+            <div class="title">
+              <i class="fa fa-chevron-right" aria-hidden="true"></i>
+              <h4 style="margin-left: 1rem">Submissions</h4>
+            </div>
+          </div>
+
+          <div
+            class="hidden"
+            style="margin-left: 1rem"
+            id="{{contract.id}}-submissions"
+          >
+            {% for submission in contract.submissions %} {% if
+            submission.attachment %}
+            <div
+              class="user-title"
+              data-target="{{submission.attachment[0].id}}"
+            >
+              <div class="title">
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                <h4 style="margin-left: 1rem">
+                  {{submission.submission_date}}
+                </h4>
+              </div>
+            </div>
+            <div class="hidden" id="{{submission.attachment[0].id}}">
+              {% for attachment in submission.attachment %}
+              <div class="job-desc">
+                <a
+                  class="highlight"
+                  href="{{url_for('files', id=attachment.file.id)}}"
+                  >{{attachment.file.file_name}}</a
+                >
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="user-title" data-target="">
+              <div class="title">
+                <h4 style="margin-left: 1rem">
+                  Marked as completed at {{submission.submission_date}}
+                </h4>
+              </div>
+            </div>
+            {% endif %} {% endfor %}
+            <form
+              class="job-desc"              
+              method="post"
+              action="{{url_for('contract_bp.close_contract', contract_id=contract.id)}}"
+            >              
+              <div class="flex justify-start">
+                <input class="button" type="submit" value="Mark contract as complete" />
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
     {% endif %} {% endfor %}

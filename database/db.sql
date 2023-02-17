@@ -105,3 +105,13 @@ CREATE TABLE Proposal(
     foreign key (attachment_id) references Attachment(id),
     PRIMARY Key (worker_id, job_id)
 );
+
+CREATE TABLE Work(
+    id char(36) PRIMARY KEY,
+    contract_id CHAR(36) NOT NULL,
+    attachment_id CHAR(36),
+    submission_date DATETIME default now(),
+
+    foreign key (contract_id) references `Contract`(id),
+    foreign key (attachment_id) references Attachment(id)    
+);

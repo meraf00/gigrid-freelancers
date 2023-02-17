@@ -1,13 +1,17 @@
+import os
 from uuid import uuid4
 from flask import Blueprint, render_template, request, jsonify, make_response, redirect, url_for
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
-from model import User, Job, ContractStatus, Contract, Escrow, UserType, db
+from model import User, Job, ContractStatus, Contract, Escrow, UserType, Work, Attachment, db
+from utils import FileManager
 
 
 contract_bp = Blueprint('contract_bp', __name__,
                         static_folder='static', template_folder='templates')
+
+file_mgr = FileManager(os.getenv('UPLOAD_FOLDER'))
 
 
 @contract_bp.route("/", methods=["POST"])
@@ -82,3 +86,46 @@ def contracts():
         return render_template("employer.html")
 
     return render_template("freelancer.html")
+
+
+@contract_bp.route("/<contract_id>", methods=["POST"])
+@login_required
+def submit_work(contract_id):
+    contract = Contract.get(contract_id)
+
+    if not contract or contract.worker_id != current_user.id:
+        return redirect(url_for("contract_bp.contracts"))
+
+    files = request.files.getlist("files")
+
+    attachment_id = None
+    if files and files[0].filename:
+        attachment_id = uuid4()
+
+        for file in files:
+            file_id = file_mgr.save(file)
+            attachment = Attachment(id=attachment_id)
+            attachment.file_id = file_id
+            db.session.add(attachment)
+
+    submission = Work(id=uuid4(), contract_id=contract_id,
+                      attachment_id=attachment_id)
+    db.session.add(submission)
+    db.session.commit()
+
+    return redirect(url_for("contract_bp.contracts"))
+
+
+@contract_bp.route("/complete/<contract_id>", methods=["POST"])
+@login_required
+def close_contract(contract_id):
+    contract = Contract.get(contract_id)
+
+    if not contract or contract.job.owner_id != current_user.id:
+        return redirect(url_for("contract_bp.contracts"))
+
+    contract.status = ContractStatus.FINISED
+
+    db.session.commit()
+
+    return redirect(url_for("contract_bp.contracts"))

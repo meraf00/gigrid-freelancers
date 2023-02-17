@@ -31,6 +31,8 @@ class ContractStatus:
 
     ACCEPTED = 'A'
     REJECTED = 'R'
+    FINISED = 'F'
+    CANCELLED = 'C'
 
 
 class ContentType:
@@ -296,11 +298,18 @@ class File(db.Model):
 
 
 class Attachment(db.Model):
+    """Job database model
+
+    Parameters:
+        id (str): unique id        
+        file_id (str): id for file
+    """
+
     id = db.Column(db.String(36), primary_key=True)
     file_id = db.Column(db.String(36), db.ForeignKey(
         File.id), primary_key=True)
 
-    files = db.relationship(File)
+    file = db.relationship(File)
 
 
 class Job(db.Model):
@@ -445,8 +454,6 @@ class Contract(db.Model):
 
         return Contract.query.filter_by(id=contract_id).first()
 
-
-
     def already_exists(job_id, worker_id):
         try:
             if Contract.query.filter_by(job_id=job_id, worker_id=worker_id).one():
@@ -513,6 +520,31 @@ class Proposal(db.Model):
     sender = db.relationship(User, backref='proposals',
                              foreign_keys=[worker_id])
     attachments = db.relationship(Attachment, foreign_keys=[attachment_id])
+
+
+class Work(db.Model):
+    """Work is created when worker submits a completed work for a contract
+
+    Parameters:
+        id (str): unique id for submission
+        contract_id (str): unique contract id        
+        attachment_id (str): attached files
+        submission_date (datetime): date of submission
+    """
+
+    id = db.Column(
+        db.Integer, primary_key=True)
+    contract_id = db.Column(
+        db.String(36), db.ForeignKey(Contract.id))
+    attachment_id = db.Column(
+        db.String(36), db.ForeignKey(Attachment.id))
+    submission_date = db.Column(
+        db.DateTime, default=datetime.now, primary_key=True)
+
+    contract = db.relationship(Contract, backref='submissions',
+                               foreign_keys=[contract_id])
+    attachment = db.relationship(Attachment, foreign_keys=[
+                                 attachment_id], uselist=True)
 
 
 # class UserBalance(db.Model):
