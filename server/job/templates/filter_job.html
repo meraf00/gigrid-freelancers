@@ -9,61 +9,27 @@
 ></script>
 {% endblock %} {% block body %}
 
-<section>
-  <div class="search">
-    <h1>Recently added jobs</h1>
-    <input id="search-bar" type="text" placeholder="search jobs..." />
-    <button type="submit" onclick="filter()">Search</button>
+<section class="grid">
+  <div>
+    <h3>Experience level</h3>
+    <div class="job-desc">
+      <select id="filter">
+        <option value="">Any</option>
+        <option value="ENTRY">Entry</option>
+        <option value="INTERMEDIATE">Intermediate</option>
+        <option value="EXPERT">Expert</option>
+      </select>
+    </div>
   </div>
-  <div class="posted-jobs"></div>
+  <div>
+    <div class="search">
+      <input id="search-bar" type="text" placeholder="search jobs..." />
+      <button type="submit" onclick="filter()">Search</button>
+    </div>
+    <div class="posted-jobs"></div>
+  </div>
 </section>
 
-<!-- <section>
-        <h1>Explore Categories</h1>
-
-        <div class="category-container">
-            <div class="category">
-                <div class="icon">
-                    <i class="fa fa-handshake fa-xl" aria-hidden="true"></i>                
-                </div>
-                <p class="desc">
-                    Business
-                </p>
-            </div>
-            <div class="category">
-                <div class="icon">
-                    <i class="fa fa-code fa-xl" aria-hidden="true"></i>                
-                </div>
-                <p class="desc">
-                    Programming &amp; Tech
-                </p>
-            </div>
-            <div class="category">
-                <div class="icon">
-                    <i class="fa fa-book fa-xl" aria-hidden="true"></i>                
-                </div>
-                <p class="desc">
-                    Writing
-                </p>
-            </div>
-            <div class="category">
-                <div class="icon">
-                    <i class="fa fa-code fa-xl" aria-hidden="true"></i>                
-                </div>
-                <p class="desc">
-                    Programming
-                </p>
-            </div>
-            <div class="category">
-                <div class="icon">
-                    <i class="fa fa-code fa-xl" aria-hidden="true"></i>                
-                </div>
-                <p class="desc">
-                    Programming
-                </p>
-            </div>
-        </div>
-    </section> -->
 <script>
   const url = new URL(document.URL);
   BASE_URL = `http://${url.hostname}:${url.port}`;
@@ -79,6 +45,7 @@
       },
       body: JSON.stringify({
         key: keyword,
+        level: document.getElementById("filter").value,
       }),
     });
     jobs = await jobs.json();
@@ -112,6 +79,13 @@
   }
 
   filter();
+
+  document.getElementById("search-bar").addEventListener("keyup", (e) => {
+    //return
+    if (e.keyCode == 13) {
+      filter();
+    }
+  });
 </script>
 
 {% endblock %}

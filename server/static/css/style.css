@@ -386,10 +386,11 @@ color: var(--primary-fg)
 .search {
   display: flex;
   gap: 3rem;
+  padding-left: 1rem;
 }
 
 .search-bar {
-  width: 30rem;
+  width: 30rem;  
 }
 
 /* form */
@@ -478,4 +479,5 @@ tr:nth-child(2n) {
   .m-3 {
     margin: 0;
   }
+  
 }

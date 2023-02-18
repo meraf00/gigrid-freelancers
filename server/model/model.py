@@ -365,7 +365,7 @@ class Job(db.Model):
             return None
 
     @staticmethod
-    def filter_job(key: str) -> Optional[Job]:
+    def filter_job(key: str, level) -> Optional[Job]:
         """Filters job using a key
 
         Args:
@@ -376,7 +376,24 @@ class Job(db.Model):
                 Job: job object if job associated with they key is found, None otherwise
         """
 
-        job = Job.query.filter(Job.title.like(f"%{key}%")).all()
+        if level:
+            query = db.and_(
+                db.or_(
+                    Job.title.like(f"%{key}%"),
+                    Job.description.like(f"%{key}%"),
+                    Job.budget.like(f"%{key}%")
+                ),
+
+                Job.experience_level == level
+            )
+        else:
+            query = db.or_(Job.title.like(f"%{key}%"),
+                           Job.description.like(f"%{key}%"),
+                           Job.experience_level.like(f"%{key}%"),
+                           Job.budget.like(f"%{key}%"))
+
+        job = Job.query.filter(query).all()
+
         return job
 
     @staticmethod

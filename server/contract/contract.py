@@ -86,9 +86,9 @@ def accept_or_reject_contract(contract_id, response):
 @login_required
 def contracts():
     if current_user.user_type == UserType.EMPLOYER:
-        return render_template("employer.html")
+        return render_template("contract_employer.html")
 
-    return render_template("freelancer.html")
+    return render_template("contract_freelancer.html")
 
 
 @contract_bp.route("/<contract_id>", methods=["POST"])

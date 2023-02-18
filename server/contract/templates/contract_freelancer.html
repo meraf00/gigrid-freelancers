@@ -104,7 +104,7 @@
     {% endif %} {% endfor %}
   </div>
 
-  <div class="tab-content hidden" class="hidden" id="pending">
+  <div class="tab-content hidden" id="pending">
     {% for contract in current_user.get_contracts() %} {% if not contract.status
     %}
     <div class="underlined">

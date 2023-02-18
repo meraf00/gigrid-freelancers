@@ -157,3 +157,20 @@ def create_proposal(job_id):
             return render_template("proposal.html", job=job)
 
     return redirect(url_for("job_bp.search"))
+
+
+@proposal_bp.route("/sent")
+@login_required
+def sent():
+    return render_template("proposal_freelancer.html")
+
+
+@proposal_bp.route("/delete/<job_id>")
+@login_required
+def delete(job_id):
+    proposal = Proposal.query.filter(
+        Proposal.job_id == job_id, Proposal.worker_id == current_user.id).first()
+    if proposal:
+        db.session.delete(proposal)
+        db.session.commit()
+    return redirect(url_for("proposal_bp.sent"))
