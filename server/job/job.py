@@ -35,6 +35,7 @@ def get_job(id):
 
 @job_bp.route('/search')
 def search():
+    print(">>>")
     return render_template('filter_job.html')
 
 

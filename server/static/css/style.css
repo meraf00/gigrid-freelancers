@@ -42,7 +42,7 @@ h6 {
 
 a {
   text-decoration: none;
-  font-family: "Lato", serif;
+  font-family: "Lora", serif;
   font-weight: 500;
   color: var(--link);
 }
@@ -161,7 +161,9 @@ header h3 {
   left: 0.5rem;
   font-family: "Work Sans", sans-serif;
 }
-
+.card-white {
+  color: white;
+}
 .card-img {
   position: relative;
   z-index: -1;
