@@ -137,3 +137,44 @@ def close_contract(contract_id):
     db.session.commit()
 
     return redirect(url_for("contract_bp.contracts"))
+
+
+@contract_bp.route("/cancel/<contract_id>")
+@login_required
+def request_refund(contract_id):
+    contract = Contract.get(contract_id)
+
+    if not contract or contract.job.owner_id != current_user.id:
+        return redirect(url_for("contract_bp.contracts"))
+
+    contract.status = ContractStatus.PENDING_CANCEL
+
+    db.session.commit()
+
+    return render_template("request_refund.html", status=200, worker=contract.worker)
+
+
+@contract_bp.route("/refund/<contract_id>/<response>")
+@login_required
+def accept_or_reject_refund(contract_id, response):
+    contract = Contract.get(contract_id)
+    print(contract, "<<<<<<<")
+    if contract.status != ContractStatus.PENDING_CANCEL:
+        return "Unauthorized"
+
+    if contract.worker_id == current_user.id:
+        if response == "accept":
+            contract.status = ContractStatus.CANCELLED
+            escrow = contract.escrow[0]
+            employer = User.get(contract.job.owner_id)
+            employer.balance += escrow.amount
+            escrow.amount = 0
+        elif response == "reject":
+            contract.status = ContractStatus.ACCEPTED
+
+            # db.session.delete(contract)
+        db.session.commit()
+
+        return redirect(url_for("contract_bp.contracts"))
+
+    return "Unauthorized"

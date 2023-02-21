@@ -72,12 +72,12 @@
 
     for (job of jobs) {
       contain.innerHTML += `
-      <div class="ccard" onclick="window.location.href='${BASE_URL}/job/${job.id}'">
+      <div class="ccard">
         <div class="ccard-rightmost">
           <div class="ccard-left">
             <i class="ccard-img fa-solid fa-briefcase fa-2x"></i>
           </div>
-          <div class="ccard-right">
+          <div class="ccard-right" onclick="window.location.href='${BASE_URL}/job/${job.id}'">
               <div class="ccard-title">
                   <span>${job.title}</span>
                   <span class="ccard-xp">[${job.experience_level}]</span>
@@ -91,7 +91,7 @@
           </div>
         </div>
         
-        <div><i class="fa fa-times fa-2x" onclick="deletePost('${job.id}')"></i></div>
+        <div class="why" onclick="deletePost('${job.id}')"><i class="fa fa-times fa-2x"></i></div>
       </div>`;
     }
   }

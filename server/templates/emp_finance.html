@@ -10,7 +10,7 @@
   <div class="flex justify-start">
     <form
       action="{{url_for('payment_bp.deposite')}}"
-      class="auth"
+      class="auth mt-3"
       method="post"
     >
       <h3 class="center">Deposit Fund</h3>
@@ -22,7 +22,7 @@
       </div>
     </form>
 
-    <form action="" class="auth m-3">
+    <!-- <form action="" class="auth m-3">
       <h3 class="center">Withdraw Fund</h3>
       <div class="field">
         <input class="input" type="number" placeholder="Amount" />
@@ -30,7 +30,7 @@
       <div class="field">
         <input class="input" type="submit" value="Withdraw" />
       </div>
-    </form>
+    </form> -->
   </div>
 </section>
 
@@ -61,6 +61,6 @@
   </p>
   <p>Total in account: <strong>{{current_user.balance}} ETB</strong></p>
 
-  <p><button class="small">Withdraw</button></p>
+  <!-- <p><button class="small">Withdraw</button></p> -->
 </section>
 {% endblock %}

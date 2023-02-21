@@ -15,8 +15,8 @@
   </div>
 
   <div class="tab-content" id="active">
-    {% for contract in current_user.get_contracts() %} {% if contract.status ==
-    "A" %}
+    {% for contract in current_user.get_contracts() %} {% if (contract.status ==
+    "A" or contract.status == "P") %}
     <div class="underlined">
       <div class="user-title" data-target="{{contract.id}}">
         <div class="title">
@@ -24,7 +24,12 @@
           <h4 style="margin-left: 1rem">{{contract.job.title}}</h4>
         </div>
 
-        <a href="{{url_for('chat_bp.message')}}">Contact</a>
+        {% if contract.status != "P" %}
+        <a
+          href="{{url_for('contract_bp.request_refund', contract_id=contract.id)}}"
+          >Cancel Contract</a
+        >
+        {% endif %}
       </div>
 
       <div class="hidden" id="{{contract.id}}">
@@ -111,8 +116,6 @@
           <i class="fa fa-chevron-right" aria-hidden="true"></i>
           <h4 style="margin-left: 1rem">{{contract.job.title}}</h4>
         </div>
-
-        <a href="{{url_for('chat_bp.message')}}">Contact</a>
       </div>
 
       <div class="hidden" id="{{contract.id}}">
@@ -138,8 +141,6 @@
           <i class="fa fa-chevron-right" aria-hidden="true"></i>
           <h4 style="margin-left: 1rem">{{contract.job.title}}</h4>
         </div>
-
-        <a href="{{url_for('chat_bp.message')}}">Contact</a>
       </div>
 
       <div class="hidden" id="{{contract.id}}">
@@ -157,8 +158,8 @@
   </div>
 
   <div class="tab-content hidden" id="completed">
-    {% for contract in current_user.get_contracts() %} {% if contract.status ==
-    "F" %}
+    {% for contract in current_user.get_contracts() %} {% if (contract.status ==
+    "F" or contract.status == "C") %}
     <div class="underlined">
       <div class="user-title" data-target="{{contract.id}}">
         <div class="title">
@@ -166,7 +167,9 @@
           <h4 style="margin-left: 1rem">{{contract.job.title}}</h4>
         </div>
 
-        <a href="{{url_for('chat_bp.message')}}">Contact</a>
+        {% if contract.status == "C" %}
+        <a class="highlight-warning">Cancelled</a>
+        {% endif %}
       </div>
 
       <div class="hidden" id="{{contract.id}}">

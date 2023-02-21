@@ -462,6 +462,19 @@ tr:nth-child(2n) {
   justify-content: flex-start;
 }
 
+.logo img {
+  max-width: 40px;
+  max-height: 30px;
+  border-radius: 50%;
+}
+
+.logo {
+  padding: 0
+}
+
+.logo a {
+  padding: 0;
+}
 @media (max-width: 700px) {
   header,
   section,

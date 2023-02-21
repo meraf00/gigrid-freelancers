@@ -47,7 +47,7 @@
 .ccard-rightmost {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center;    
 }
 
 .ccard .fa-times:hover { 
@@ -71,6 +71,12 @@
 
 .highlight {
     background-color: rgb(231, 248, 244);
+    padding: .1rem .5rem;
+    font-weight: 500;
+}
+
+.highlight-warning {
+    background-color: rgb(245, 255, 105);
     padding: .1rem .5rem;
     font-weight: 500;
 }

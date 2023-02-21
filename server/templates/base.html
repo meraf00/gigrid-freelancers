@@ -52,7 +52,9 @@
     <![endif]-->
     <nav>
       <div class="logo">
-        <a href="{{url_for('home')}}"><img src="Logo" alt="" />Logo</a>
+        <a href="{{url_for('home')}}"
+          ><img src="{{url_for('static', filename='img/logo.png')}}" alt="Logo"
+        /></a>
       </div>
 
       <ul>

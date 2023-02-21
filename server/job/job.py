@@ -106,8 +106,14 @@ def filter():
 def delete():
     id = request.json.get("id")
     job = db.session.query(Job).filter(Job.id == id).first()
-    db.session.delete(job)
-    db.session.commit()
+
+    if not len(job.contract):
+        for proposal in job.proposals:
+            db.session.delete(proposal)
+
+        db.session.delete(job)
+        db.session.commit()
+
     return ""
 
 

@@ -33,6 +33,7 @@ class ContractStatus:
     REJECTED = 'R'
     FINISED = 'F'
     CANCELLED = 'C'
+    PENDING_CANCEL = 'P'
 
 
 class ContentType:
@@ -479,7 +480,10 @@ class Contract(db.Model):
         try:
             contract = Contract.query.filter(Contract.job_id == job_id,
                                              Contract.worker_id == worker_id,
-                                             Contract.status != ContractStatus.REJECTED).one()
+                                             db.or_(
+                                                 Contract.status == ContractStatus.ACCEPTED,
+                                                 Contract.status == None)
+                                             ).one()
             if contract:
                 return True
         except NoResultFound:
