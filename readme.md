@@ -28,3 +28,13 @@
     - `git push -u origin dev`
 
 
+# Installing python modules and setting up the environment
+
+## You only have to do this once (only the first time you clone the project)
+- `pip install virtualenv`
+- `virtualenv venv`
+- `venv\Scripts\activate`
+
+## Any time the content of `requirements.txt` change
+- `venv\Scripts\activate`
+- `pip install -r requirements.txt`
