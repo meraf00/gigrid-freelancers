@@ -1,7 +1,9 @@
-# We will be creating freelancing platform
+# Gigrid Freelancers
+
+A freelancing platform incorporating the job posting, job matching, chat functionality and payment integration with [Chapa](https://chapa.co/).
 
 ## Cloning the repo
-- `git clone https://github.com/meraf00/fse-project.git`
+- `git clone https://github.com/meraf00/gigrid-freelancers.git`
 
 ## Catching up with remote repo
 - `git pull`
